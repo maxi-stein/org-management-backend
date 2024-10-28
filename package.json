@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "./bin/baseApi",
-    "dev": "nodemon ./bin/baseApi",
-    "format": "prettier --write '**/*.{js,json,md}'",
+    "start": "node ./bin/baseApi.js",
+    "dev": "nodemon ./bin/baseApi.js",
+    "prettify": "prettier --write '**/*.{js,json,md}'",
     "lint": "eslint . --ext .js",
     "migrate": "migrate-mongo"
   },

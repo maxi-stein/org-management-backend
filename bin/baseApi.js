@@ -1,20 +1,15 @@
-#! /usr/bin/env node
 /* eslint-disable global-require, no-undef */
+const figlet = require('figlet')
+const pkg = require('../package')
+const program = require('..')
 
 function start() {
-  const figlet = require('figlet')
-  const pkg = require('../package')
-  const program = require('..')
-
   process.stdout.write('\n')
   process.stdout.write(`${figlet.textSync(`Base API server`, { font: 'Ogre' })}\n`)
   process.stdout.write('\n')
-  process.stdout.write(
-    `Version: ${pkg.version}, Environment: ${process.env.NODE_ENV || 'default'}\n`,
-  )
+  process.stdout.write(`Version: ${pkg.version}, Environment: ${process.env.NODE_ENV || 'default'}\n`)
   process.stdout.write('\n')
   process.stdout.write('\n')
-
 
   program
     .start()
