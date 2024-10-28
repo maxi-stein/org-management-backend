@@ -1,6 +1,6 @@
-const { Router } = require('express')
+import { Router } from 'express'
 
-const generateUserAndToken = require('../../utils/generate-user-and-token')
+import generateUserAndToken from '../../utils/generate-user-and-token.js'
 
 const router = new Router()
 
@@ -49,4 +49,4 @@ async function createUserToken(req, res, next) {
   }
 }
 
-module.exports = router
+export default router

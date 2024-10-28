@@ -1,6 +1,6 @@
-const winston = require('winston')
-const winstonChildLogger = require('winston-child-logger')
-const config = require('config')
+import winston from 'winston'
+import winstonChildLogger from 'winston-child-logger'
+import config from 'config'
 
 const logger = winstonChildLogger(new winston.Logger())
 
@@ -18,4 +18,4 @@ if (config.logger.console) {
   logger.add(winston.transports.Console, config.logger.console)
 }
 
-module.exports = logger
+export default logger

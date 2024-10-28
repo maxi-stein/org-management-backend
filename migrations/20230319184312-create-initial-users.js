@@ -1,4 +1,4 @@
-const mongodb = require('mongodb')
+import mongodb from 'mongodb'
 
 const { ObjectId } = mongodb
 
@@ -53,16 +53,14 @@ const initialUsers = [
   },
 ]
 
-module.exports = {
-  async up(db) {
-    await db.collection('users').insertMany(initialUsers)
-  },
+export const up = async (db) => {
+  await db.collection('users').insertMany(initialUsers)
+}
 
-  async down(db) {
-    await db.collection('users').deleteMany({
-      _id: {
-        $in: initialUsers.map((user) => user._id),
-      },
-    })
-  },
+export const down = async (db) => {
+  await db.collection('users').deleteMany({
+    _id: {
+      $in: initialUsers.map((user) => user._id),
+    },
+  })
 }

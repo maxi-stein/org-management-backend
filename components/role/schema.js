@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const { Schema } = mongoose
 
@@ -6,4 +6,4 @@ const roleSchema = new Schema({
   name: { type: String, required: true, lowercase: true, trim: true, unique: true },
 })
 
-module.exports = roleSchema
+export default roleSchema

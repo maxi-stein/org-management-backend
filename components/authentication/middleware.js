@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken')
-const createError = require('http-errors')
+import jwt from 'jsonwebtoken'
+import createError from 'http-errors'
 
-const publicKey = require('../../lib/public-key')
+import publicKey from '../../lib/public-key.js'
 
 function getToken(req, next) {
   const TOKEN_REGEX = /^\s*Bearer\s+(\S+)/g
@@ -15,7 +15,7 @@ function getToken(req, next) {
   return token
 }
 
-function authenticationMiddleware(req, res, next) {
+export const authentication = (req, res, next) => {
   if (!req.headers.authorization) {
     req.logger.warn('Missing authorization header')
     return next(new createError.Unauthorized())
@@ -50,7 +50,7 @@ function authenticationMiddleware(req, res, next) {
   }
 }
 
-function authorizationMiddleware(req, res, next) {
+export const authorization = (req, res, next) => {
   req.isAdmin = function isAdmin() {
     return req.user && req.user.role === 'admin'
   }
@@ -60,9 +60,4 @@ function authorizationMiddleware(req, res, next) {
   }
 
   return next(null)
-}
-
-module.exports = {
-  authentication: authenticationMiddleware,
-  authorization: authorizationMiddleware,
 }

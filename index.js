@@ -1,8 +1,8 @@
-const config = require('config')
-const logger = require('./logger')
-const BaseApi = require('./lib/baseApi')
+import config from 'config'
+import logger from './logger.js'
+import BaseApi from './lib/baseApi.js'
 
 const baseApi = new BaseApi(config, logger)
 baseApi.BaseApi = BaseApi
 
-module.exports = baseApi
+export default baseApi

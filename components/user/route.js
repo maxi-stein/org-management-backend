@@ -1,6 +1,6 @@
-const { Router } = require('express')
+import { Router } from 'express'
 const router = new Router()
-const bcrypt = require('bcrypt')
+import bcrypt from 'bcrypt'
 
 router.get('/', getAllUsers)
 router.get('/:id', getUserById)
@@ -125,4 +125,4 @@ async function updateUser(req, res, next) {
   }
 }
 
-module.exports = router
+export default router

@@ -1,12 +1,10 @@
-const currentConfig = require('config')
+import currentConfig from 'config'
 
 const config = {
   mongodb: {
     url: currentConfig.mongo.url,
     databaseName: currentConfig.mongo.db,
     options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
     },
   },
   migrationsDir: 'migrations',
@@ -16,4 +14,4 @@ const config = {
   moduleSystem: 'commonjs',
 }
 
-module.exports = config
+export default config

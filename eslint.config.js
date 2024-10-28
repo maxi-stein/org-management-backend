@@ -1,21 +1,8 @@
-const globals = require('globals')
-const pluginJs = require('@eslint/js')
+// For import export
+import globals from 'globals'
+import pluginJs from '@eslint/js'
 
-const config = [
-  { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-]
-
-module.exports = config
-// // For import export
-// import globals from "globals";
-// import pluginJs from "@eslint/js";
-
-// export default [
-//   {languageOptions: { globals: globals.browser }},
-//   pluginJs.configs.recommended,
-// ];
+export default [{ languageOptions: { globals: globals.browser } }, pluginJs.configs.recommended]
 
 // // For typescript import export
 // import globals from "globals";

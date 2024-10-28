@@ -1,5 +1,5 @@
-const { Router } = require('express')
-const pkg = require('../../package.json')
+import { Router } from 'express'
+// import pkg from '../../package.json'
 
 const router = new Router()
 
@@ -12,8 +12,10 @@ function getRoot(req, res) {
 
   /* eslint-disable no-undef */
   res.send({
-    name: pkg.name,
-    version: pkg.version,
+    name: 'pkg.name',
+    // name: pkg.name,
+    version: 'pkg.version',
+    // version: pkg.version,
     enviroment: process.env.ENV,
   })
 }
@@ -34,4 +36,4 @@ async function getStatus(req, res, next) {
   }
 }
 
-module.exports = router
+export default router

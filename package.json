@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "migrate": "migrate-mongo"
   },
+  "type": "module",
   "pre-commit": [
     "format",
     "lint"
