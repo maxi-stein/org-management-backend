@@ -54,11 +54,11 @@ const initialUsers = [
 ]
 
 module.exports = {
-  async up(db, client) {
+  async up(db) {
     await db.collection('users').insertMany(initialUsers)
   },
 
-  async down(db, client) {
+  async down(db) {
     await db.collection('users').deleteMany({
       _id: {
         $in: initialUsers.map((user) => user._id),

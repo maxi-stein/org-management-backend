@@ -20,6 +20,7 @@ async function generateUserAndToken(req, user) {
 
   // The next line is only when the app is deployed
   // const privateKey = await req.secrets.get(req.config.auth.key)
+  // eslint-disable-next-line no-undef
   const privateKey = fs.readFileSync(path.join(__dirname, `../keys/${req.config.auth.key}.pem`))
 
   const token = jwt.sign(payload, privateKey, {

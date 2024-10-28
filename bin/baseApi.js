@@ -1,4 +1,4 @@
-/* eslint-disable global-require, no-undef */
+/* eslint-disable no-undef */
 const figlet = require('figlet')
 const pkg = require('../package')
 const program = require('..')

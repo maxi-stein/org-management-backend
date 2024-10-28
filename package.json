@@ -6,7 +6,7 @@
     "start": "node ./bin/baseApi.js",
     "dev": "nodemon ./bin/baseApi.js",
     "prettify": "prettier --write '**/*.{js,json,md}'",
-    "lint": "eslint . --ext .js",
+    "lint": "eslint .",
     "migrate": "migrate-mongo"
   },
   "pre-commit": [
@@ -20,25 +20,28 @@
   "author": "larrieragaston <larriera.gaston@gmail.com>",
   "homepage": "https://github.com/larrieragaston/api-test#readme",
   "dependencies": {
-    "bcrypt": "^5.1.0",
-    "config": "^3.3.7",
+    "bcrypt": "^5.1.1",
+    "config": "^3.3.12",
     "cors": "^2.8.5",
-    "express": "~4.16.1",
-    "figlet": "^1.5.2",
-    "jsonwebtoken": "^8.5.1",
-    "migrate-mongo": "^9.0.0",
-    "mongodb": "^4.3.1",
-    "mongoose": "^6.6.4",
+    "express": "~4.21.1",
+    "figlet": "^1.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "migrate-mongo": "^11.0.0",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.7.3",
     "mongoose-validator": "^2.1.0",
     "on-finished": "^2.4.1",
-    "require-all": "^2.2.0",
+    "require-all": "^3.0.0",
     "to-camel-case": "^1.0.0",
     "winston": "2.4.5",
     "winston-child-logger": "0.0.1"
   },
   "devDependencies": {
-    "eslint": "^8.25.0",
-    "nodemon": "^2.0.20",
-    "prettier": "2.7.1"
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "nodemon": "^3.1.7",
+    "prettier": "3.3.3",
+    "typescript-eslint": "^8.11.0"
   }
 }

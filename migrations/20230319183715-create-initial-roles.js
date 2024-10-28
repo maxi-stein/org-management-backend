@@ -18,11 +18,11 @@ const initialRoles = [
 ]
 
 module.exports = {
-  async up(db, client) {
+  async up(db) {
     await db.collection('roles').insertMany(initialRoles)
   },
 
-  async down(db, client) {
+  async down(db) {
     await db.collection('roles').deleteMany({
       _id: {
         $in: initialRoles.map((role) => role._id),
