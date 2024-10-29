@@ -1,6 +1,7 @@
 import { Router } from 'express'
-const router = new Router()
 import bcrypt from 'bcrypt'
+
+const router = new Router()
 
 router.get('/', getAllUsers)
 router.get('/:id', getUserById)

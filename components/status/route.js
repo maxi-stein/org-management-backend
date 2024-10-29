@@ -1,5 +1,5 @@
 import { Router } from 'express'
-// import pkg from '../../package.json'
+import pkg from '../../package.json' with { type: 'json' }
 
 const router = new Router()
 
@@ -12,10 +12,8 @@ function getRoot(req, res) {
 
   /* eslint-disable no-undef */
   res.send({
-    name: 'pkg.name',
-    // name: pkg.name,
-    version: 'pkg.version',
-    // version: pkg.version,
+    name: pkg.name,
+    version: pkg.version,
     enviroment: process.env.ENV,
   })
 }

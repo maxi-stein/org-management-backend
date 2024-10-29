@@ -4,8 +4,7 @@ const config = {
   mongodb: {
     url: currentConfig.mongo.url,
     databaseName: currentConfig.mongo.db,
-    options: {
-    },
+    options: {},
   },
   migrationsDir: 'migrations',
   changelogCollectionName: 'changelog',

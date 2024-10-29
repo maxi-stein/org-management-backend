@@ -1,13 +1,13 @@
+/* eslint-disable no-undef */
 import figlet from 'figlet'
-// import pkg from '../package.json'
+import pkg from '../package.json' with { type: 'json' }
 import program from '../index.js'
 
 function start() {
   process.stdout.write('\n')
   process.stdout.write(`${figlet.textSync(`Base API server`, { font: 'Ogre' })}\n`)
   process.stdout.write('\n')
-  process.stdout.write(`Version: 1, Environment: ${process.env.NODE_ENV || 'default'}\n`)
-  // process.stdout.write(`Version: ${pkg.version}, Environment: ${process.env.NODE_ENV || 'default'}\n`)
+  process.stdout.write(`Version: ${pkg.version}, Environment: ${process.env.NODE_ENV || 'default'}\n`)
   process.stdout.write('\n')
   process.stdout.write('\n')
 
