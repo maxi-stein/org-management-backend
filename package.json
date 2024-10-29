@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/baseApi.js",
-    "dev": "nodemon ./bin/baseApi.js",
+    "dev": "NODE_ENV=development nodemon ./bin/baseApi.js",
     "prettify": "prettier --write '**/*.{js,json,md}'",
     "lint": "eslint .",
     "migrate": "migrate-mongo"
