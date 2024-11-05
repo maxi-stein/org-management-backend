@@ -4,7 +4,7 @@ import generateUserAndToken from '../../utils/generate-user-and-token.js'
 
 const router = new Router()
 
-router.post('/token', createUserToken)
+router.post('/', createUserToken)
 
 async function createUserToken(req, res, next) {
   req.logger.info(`Creating user token for ${req.body.email}`)

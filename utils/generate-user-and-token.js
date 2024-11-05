@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url) // get the resolved path to th
 const __dirname = path.dirname(__filename) // get the name of the directory
 
 async function generateUserAndToken(req, user) {
-  const role = await req.model('Role').findById(user.role).exec()
+  const role = await req.model('Role').findById(user.role).lean().exec()
 
   const payload = {
     _id: user._id,
