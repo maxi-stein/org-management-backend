@@ -8,7 +8,7 @@
 
   "auth": {
     "token": {
-      "issuer": "BaseApi",
+      "issuer": "Org-Management-API",
       "algorithm": "RS256"
     },
     "key": "base-api-local",

@@ -10,7 +10,7 @@
   "auth": {
     "token": {
       "secret": "secret",
-      "issuer": "BaseApi",
+      "issuer": "Org-Management-API",
       "algorithm": "RS256"
     },
     "key": "base-api-local",
