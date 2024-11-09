@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const areaSchema = new mongoose.Schema(
+export const areaSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -20,5 +20,3 @@ const areaSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
-module.exports = mongoose.model('Area', areaSchema);

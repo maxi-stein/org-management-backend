@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const positionSchema = new mongoose.Schema(
+export const positionSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     level: { type: Number, required: true }, //Junior, Semi-Senior, Senior, etc.
@@ -15,9 +15,13 @@ const positionSchema = new mongoose.Schema(
       ref: 'Position',
       default: null,
     },
-    description: { type: String, required: true, trim: true },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 10,
+      maxlength: 200,
+    },
   },
   { timestamps: true },
 );
-
-export default positionSchema;

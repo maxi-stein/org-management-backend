@@ -1,4 +1,4 @@
-const departmentSchema = new mongoose.Schema(
+export const departmentSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -17,5 +17,3 @@ const departmentSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
-module.exports = mongoose.model('Department', departmentSchema);

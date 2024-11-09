@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const { ObjectId } = Schema.Types;
 const emailValidator = validate({ validator: 'isEmail' });
 
-const userSchema = new Schema(
+export const userSchema = new Schema(
   {
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
@@ -52,5 +52,3 @@ userSchema.method(
     return { isOk: isMatch, isLocked: !this.isActive };
   },
 );
-
-export default userSchema;

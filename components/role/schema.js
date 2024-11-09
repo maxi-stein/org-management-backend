@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const roleSchema = new Schema(
+export const roleSchema = new Schema(
   {
     name: {
       type: String,
@@ -14,5 +14,3 @@ const roleSchema = new Schema(
   },
   { timestamps: true },
 );
-
-export default roleSchema;
