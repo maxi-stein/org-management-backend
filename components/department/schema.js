@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 export const departmentSchema = new mongoose.Schema(
   {
     name: {

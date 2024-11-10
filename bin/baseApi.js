@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import figlet from 'figlet';
 import pkg from '../package.json' with { type: 'json' };
 import program from '../index.js';
