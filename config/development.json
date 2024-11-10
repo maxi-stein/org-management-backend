@@ -2,8 +2,9 @@
   "env": "development",
 
   "server": {
-    "url": "",
-    "maxResultsLimit": 1000
+    "url": "http://localhost:4000",
+    "maxResultsLimit": 1000,
+    "port": 4000
   },
 
   "auth": {

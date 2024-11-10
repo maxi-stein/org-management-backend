@@ -1,19 +1,32 @@
 import winston from 'winston';
-import winstonChildLogger from 'winston-child-logger';
 import config from 'config';
 
-export const logger = winstonChildLogger(new winston.Logger());
+const { combine, timestamp, printf, prettyPrint, errors } = winston.format;
 
-logger.levelLength = 7;
-logger.padLevels = true;
-
-logger.filters.push((_, message, meta) => {
-  if (!message && meta instanceof Error) {
-    return meta.stack || meta.message;
-  }
-  return message;
+export const logger = winston.createLogger({
+  level: config.logger.console.level,
+  formats: combine(
+    errors({ stack: true }),
+    timestamp(),
+    prettyPrint(),
+    printf(
+      (info) =>
+        `${info.timestamp} ${info.level}: ${info.message} (context: ${info.context})`,
+    ),
+  ),
+  transports: [
+    new winston.transports.Console({
+      format: combine(
+        errors({ stack: true }),
+        timestamp(),
+        winston.format.colorize(),
+        prettyPrint(),
+        printf(
+          (info) =>
+            `${info.timestamp} ${info.level}: ${info.message} (context: ${info.context})`,
+        ),
+      ),
+    }),
+    new winston.transports.File({ filename: 'api-errors.log', level: 'error' }),
+  ],
 });
-
-if (config.logger.console) {
-  logger.add(winston.transports.Console, config.logger.console);
-}
