@@ -1,12 +1,17 @@
 import Joi from 'joi';
 
-const requiredMsg = (label) => ({ 'any.required': `${label} is required` });
+import { requiredMsg } from '../../shared/validation.js';
+
+const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
 const schema = Joi.object({
   firstName: Joi.string().required().messages(requiredMsg('firstName')),
   lastName: Joi.string().required().messages(requiredMsg('lastName')),
   email: Joi.string().email().required().messages(requiredMsg('email')),
-  password: Joi.string().required().messages(requiredMsg('password')),
+  password: Joi.string()
+    .pattern(pattern)
+    .required()
+    .messages(requiredMsg('password')),
   role: Joi.object()
     .keys({
       _id: Joi.string().required().messages(requiredMsg('_id')),
