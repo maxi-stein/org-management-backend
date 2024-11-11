@@ -29,7 +29,7 @@ async function getAllUsers(req, res, next) {
 }
 
 async function getUserById(req, res, next) {
-  req.logger.info('getUserById with id: ', req.params.id);
+  req.logger.info('getUserById with id: ' + req.params.id);
 
   if (!req.params.id) {
     return res.status(404).send('Parameter Id not found');
@@ -57,7 +57,7 @@ async function getUserById(req, res, next) {
 }
 
 async function createUser(req, res, next) {
-  req.logger.info('createUser: ', req.body);
+  req.logger.info('createUser: ' + req.body);
 
   if (!req.isAdmin()) {
     return res.status(403).send('Unauthorized');
@@ -88,7 +88,7 @@ async function createUser(req, res, next) {
 }
 
 async function updateUser(req, res, next) {
-  req.logger.info('updateUser with id: ', req.params.id);
+  req.logger.info('updateUser with id: ' + req.params.id);
 
   if (!req.params.id) {
     return res.status(404).send('Parameter id not found');

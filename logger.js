@@ -20,7 +20,6 @@ export const logger = winston.createLogger({
         errors({ stack: true }),
         timestamp(),
         winston.format.colorize(),
-        prettyPrint(),
         printf(
           (info) =>
             `${info.timestamp} ${info.level}: ${info.message} (context: ${info.context})`,

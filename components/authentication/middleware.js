@@ -6,7 +6,6 @@ import { publicKey } from '../../lib/public-key.js';
 function getToken(req, next) {
   const TOKEN_REGEX = /^\s*Bearer\s+(\S+)/g;
   const matches = TOKEN_REGEX.exec(req.headers.authorization);
-
   if (!matches) {
     return next(new createError.Unauthorized());
   }
@@ -20,7 +19,6 @@ export const authentication = (req, res, next) => {
     req.logger.warn('Missing authorization header');
     return next(new createError.Unauthorized());
   }
-
   const token = getToken(req, next);
 
   try {

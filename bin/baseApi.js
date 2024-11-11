@@ -24,7 +24,8 @@ function start() {
       }
     })
     .catch((err) => {
-      program.logger.error(`Failed to start the API`, err);
+      program.logger.error(`Failed to start the API`);
+      program.logger.error(err);
     });
 }
 
