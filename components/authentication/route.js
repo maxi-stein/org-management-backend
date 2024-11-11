@@ -30,8 +30,7 @@ async function createUserToken(req, res, next) {
     }
 
     req.logger.verbose('Checking user password');
-    const { passwordTtl } = req.config.auth;
-    const result = await user.checkPassword(req.body.password, passwordTtl);
+    const result = await user.checkPassword(req.body.password);
 
     if (result.isLocked) {
       req.logger.verbose('User is locked. Sending 400 (Locked) to client');
