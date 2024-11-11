@@ -23,8 +23,8 @@
   },
 
   "mongo": {
-    "db": "base-api",
-    "url": "mongodb://localhost/base-api"
+    "db": "org-management",
+    "url": "mongodb://localhost/org-management"
   },
 
   "logger": {
