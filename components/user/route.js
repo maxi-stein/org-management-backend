@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
+import { validatePost } from './validation.js';
 
 export const userRouter = new Router();
 
 userRouter.get('/', getAllUsers);
 userRouter.get('/:id', getUserById);
-userRouter.post('/', createUser);
+userRouter.post('/', validatePost, createUser);
 userRouter.put('/:id', updateUser);
 
 function toDate(input) {
@@ -57,26 +58,32 @@ async function getUserById(req, res, next) {
 }
 
 async function createUser(req, res, next) {
-  req.logger.info('createUser: ' + req.body);
+  req.logger.info('createUser: ' + JSON.stringify(req.body));
 
   if (!req.isAdmin()) {
     return res.status(403).send('Unauthorized');
   }
 
-  const user = req.body;
+  const { email, password, role, bornDate } = req.body;
 
   try {
-    const role = await req.model('Role').findOne({ name: user.role });
-    if (!role) {
+    const userExists = await req.model('User').findOne({ email });
+    if (userExists) {
+      req.logger.error('User already exists');
+      return res.status(400).send('User already exists');
+    }
+
+    const roleFound = await req.model('Role').findOne({ name: role.name });
+    if (!roleFound) {
       req.logger.error('Role not found');
       return res.status(404).send('Role not found');
     }
 
-    const passEncrypted = await bcrypt.hash(user.password, 10);
+    const passEncrypted = await bcrypt.hash(password, 10);
 
     const userCreated = await req.model('User').create({
-      ...user,
-      bornDate: toDate(user.bornDate),
+      ...req.body,
+      bornDate: toDate(bornDate),
       password: passEncrypted,
       role: role._id,
     });
