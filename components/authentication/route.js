@@ -25,7 +25,7 @@ async function createUserToken(req, res, next) {
       .findOne({ email: req.body.email }, '+password');
 
     if (!user) {
-      req.logger.verbose('User not found. Sending 404 to client');
+      req.logger.verbose('User or password is invalid. Sending 401 to client');
       return res.status(401).end();
     }
 
@@ -38,7 +38,7 @@ async function createUserToken(req, res, next) {
     }
 
     if (!result.isOk) {
-      req.logger.verbose('User password is invalid. Sending 401 to client');
+      req.logger.verbose('User or password is invalid. Sending 401 to client');
       return res.status(401).end();
     }
 

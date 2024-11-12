@@ -88,6 +88,7 @@ async function createUser(req, res, next) {
       role: role._id,
     });
 
+    delete userCreated.password;
     res.send(userCreated);
   } catch (err) {
     next(err);
@@ -105,8 +106,9 @@ async function updateUser(req, res, next) {
     return res.status(403).send('Unauthorized');
   }
 
-  // The email can't be updated
+  // The email and _id can't be updated
   delete req.body.email;
+  delete req.body._id;
 
   try {
     const userToUpdate = await req.model('User').findById(req.params.id);
@@ -133,6 +135,7 @@ async function updateUser(req, res, next) {
 
     await userToUpdate.updateOne(req.body);
 
+    delete userToUpdate.password;
     res.send(userToUpdate);
   } catch (err) {
     next(err);
