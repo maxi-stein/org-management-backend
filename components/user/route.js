@@ -10,6 +10,7 @@ userRouter.post('/', validatePost, createUser);
 userRouter.put('/:id', updateUser);
 
 function toDate(input) {
+  req.logger.verbose('Converting ' + input + ' to Date');
   const [day, month, year] = input.split('/');
   return new Date(year, month, day);
 }
@@ -18,11 +19,13 @@ async function getAllUsers(req, res, next) {
   req.logger.info('getAllUsers');
 
   if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized');
+    return res.status(403).send('Unauthorized role');
   }
 
+  req.logger.verbose('Finding all users');
   try {
     const users = await req.model('User').find({ isActive: true });
+    req.logger.info('Found ' + users.length + ' users');
     res.send(users);
   } catch (err) {
     next(err);
@@ -37,10 +40,11 @@ async function getUserById(req, res, next) {
   }
 
   if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized');
+    return res.status(403).send('Unauthorized role');
   }
 
   try {
+    req.logger.verbose('Finding user');
     const user = await req
       .model('User')
       .findById(req.params.id)
@@ -51,6 +55,7 @@ async function getUserById(req, res, next) {
       return res.status(404).send('User not found');
     }
 
+    req.logger.info('User found');
     res.send(user);
   } catch (err) {
     next(err);
@@ -73,20 +78,27 @@ async function createUser(req, res, next) {
       return res.status(400).send('User already exists');
     }
 
-    const roleFound = await req.model('Role').findOne({ name: role.name });
+    req.logger.verbose('Checking role');
+
+    const roleFound = await req.model('Role').findById(role);
     if (!roleFound) {
       req.logger.error('Role not found');
       return res.status(404).send('Role not found');
     }
 
+    req.logger.info('Role found');
+
     const passEncrypted = await bcrypt.hash(password, 10);
+
+    req.logger.verbose('Creating user');
 
     const userCreated = await req.model('User').create({
       ...req.body,
       bornDate: toDate(bornDate),
       password: passEncrypted,
-      role: role._id,
     });
+
+    req.logger.info('User created');
 
     delete userCreated.password;
     res.send(userCreated);
@@ -103,7 +115,7 @@ async function updateUser(req, res, next) {
   }
 
   if (!req.isAdmin() && req.params.id != req.user._id) {
-    return res.status(403).send('Unauthorized');
+    return res.status(403).send('Unauthorized role');
   }
 
   // The email and _id can't be updated
@@ -111,6 +123,7 @@ async function updateUser(req, res, next) {
   delete req.body._id;
 
   try {
+    req.logger.verbose('Finding user to update');
     const userToUpdate = await req.model('User').findById(req.params.id);
 
     if (!userToUpdate) {
@@ -118,13 +131,18 @@ async function updateUser(req, res, next) {
       return res.status(404).send('User not found');
     }
 
+    req.logger.info('User found');
+
     if (req.body.role) {
+      req.logger.verbose('Checking role');
       const newRole = await req.model('Role').findById(req.body.role);
 
       if (!newRole) {
         req.logger.verbose('New role not found. Sending 400 to client');
         return res.status(400).end();
       }
+
+      req.logger.info('Role found');
       req.body.role = newRole._id;
     }
 
@@ -133,7 +151,9 @@ async function updateUser(req, res, next) {
       req.body.password = passEncrypted;
     }
 
+    req.logger.verbose('Updating user');
     await userToUpdate.updateOne(req.body);
+    req.logger.info('User updated');
 
     delete userToUpdate.password;
     res.send(userToUpdate);
