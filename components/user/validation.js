@@ -12,22 +12,30 @@ const schema = Joi.object({
     .pattern(pattern)
     .required()
     .messages(requiredMsg('password')),
-  role: Joi.object()
-    .keys({
-      _id: Joi.string().required().messages(requiredMsg('_id')),
-      name: Joi.string().required().messages(requiredMsg('name')),
-    })
-    .required()
-    .messages(requiredMsg('role')),
+  role: Joi.string().required().messages(requiredMsg('role')),
   supervisor: Joi.string(),
   phone: Joi.string().required().messages(requiredMsg('phone')),
-  bornDate: Joi.date().required().messages(requiredMsg('bornDate')),
+  bornDate: Joi.string()
+    .required()
+    .custom((value, helpers) => {
+      const [day, month, year] = value.split('/');
+      const date = new Date(year, month - 1, day);
+      if (
+        date.getFullYear() !== parseInt(year, 10) ||
+        date.getMonth() !== parseInt(month, 10) - 1 ||
+        date.getDate() !== parseInt(day, 10)
+      ) {
+        return helpers.error('any.invalid');
+      }
+      return date;
+    })
+    .messages(requiredMsg('bornDate')),
   isActive: Joi.boolean().default(true),
   position: Joi.string(),
 });
 
 export const validatePost = (req, res, next) => {
-  req.logger.verbose('Validating user fields');
+  req.logger.verbose('Validating create user fields');
   const { error } = schema.validate(req.body);
   if (error) {
     req.logger.error(error.details[0].message);
