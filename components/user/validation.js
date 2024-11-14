@@ -19,7 +19,9 @@ const schema = Joi.object({
     })
     .required()
     .messages(requiredMsg('role')),
-  supervisor: Joi.string(),
+  supervisedEmployees: Joi.array()
+    .items(Joi.string().length(24).hex().required())
+    .default([]),
   phone: Joi.string().required().messages(requiredMsg('phone')),
   bornDate: Joi.date().required().messages(requiredMsg('bornDate')),
   isActive: Joi.boolean().default(true),

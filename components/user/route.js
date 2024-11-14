@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import { validatePost } from './validation.js';
+import { mongoose } from 'mongoose';
 
 export const userRouter = new Router();
 
@@ -81,6 +82,8 @@ async function createUser(req, res, next) {
 
     const passEncrypted = await bcrypt.hash(password, 10);
 
+    await checkSupervisedEmployees(req, res);
+
     const userCreated = await req.model('User').create({
       ...req.body,
       bornDate: toDate(bornDate),
@@ -107,6 +110,7 @@ async function updateUser(req, res, next) {
 
   // The email can't be updated
   delete req.body.email;
+  delete req.body.id;
 
   try {
     const userToUpdate = await req.model('User').findById(req.params.id);
@@ -131,6 +135,9 @@ async function updateUser(req, res, next) {
       req.body.password = passEncrypted;
     }
 
+    await checkSupervisedEmployees(req, res);
+
+    req.logger.verbose('Updating user');
     await userToUpdate.updateOne(req.body);
 
     res.send(userToUpdate);
@@ -138,3 +145,38 @@ async function updateUser(req, res, next) {
     next(err);
   }
 }
+
+const checkSupervisedEmployees = async (req, res) => {
+  //check if all employees in charge exists
+  req.logger.verbose('Checking if all employees in charge exist');
+  if (req.body.supervisedEmployees?.length > 0) {
+    //filter duplicates ids
+    req.body.supervisedEmployees = Array.from(
+      new Set(req.body.supervisedEmployees),
+    );
+    //eliminate self id (buisness rule)
+    req.body.supervisedEmployees = req.body.supervisedEmployees.filter(
+      (id) => id !== req.user._id,
+    );
+
+    const supervisedEmployeesIds = req.body.supervisedEmployees.map(
+      (id) => new mongoose.Types.ObjectId(id),
+    );
+    const employees = await req
+      .model('User')
+      .find({
+        _id: { $in: supervisedEmployeesIds },
+      })
+      .select('_id');
+
+    if (employees.length !== supervisedEmployeesIds.length) {
+      console.log('entro error');
+      const missingIds = supervisedEmployeesIds.filter(
+        (id) => !employees.some((employee) => employee._id.equals(id)),
+      );
+      throw new Error(
+        `The following employees in charge don't exist: ${missingIds}`,
+      );
+    }
+  }
+};
