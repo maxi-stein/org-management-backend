@@ -28,6 +28,7 @@ async function getAllUsers(req, res, next) {
     req.logger.info('Found ' + users.length + ' users');
     res.send(users);
   } catch (err) {
+    req.logger.error(err);
     next(err);
   }
 }
@@ -58,6 +59,7 @@ async function getUserById(req, res, next) {
     req.logger.info('User found');
     res.send(user);
   } catch (err) {
+    req.logger.error(err);
     next(err);
   }
 }
@@ -90,7 +92,7 @@ async function createUser(req, res, next) {
 
     const passEncrypted = await bcrypt.hash(password, 10);
 
-    await checkSupervisedEmployees(req, res);
+    await checkSupervisedEmployees(req);
 
     const userCreated = await req.model('User').create({
       ...req.body,
@@ -121,6 +123,7 @@ async function updateUser(req, res, next) {
 
   // The email and _id can't be updated
   delete req.body.email;
+  delete req.body._id;
 
   try {
     req.logger.verbose('Finding user to update');
@@ -131,7 +134,7 @@ async function updateUser(req, res, next) {
       return res.status(404).send('User not found');
     }
 
-    req.logger.info('User found');
+    await checkSupervisedEmployees(req);
 
     if (req.body.role) {
       req.logger.verbose('Checking role');
@@ -157,11 +160,12 @@ async function updateUser(req, res, next) {
     delete userToUpdate.password;
     res.send(userToUpdate);
   } catch (err) {
+    req.logger.error(err);
     next(err);
   }
 }
 
-const checkSupervisedEmployees = async (req, res) => {
+const checkSupervisedEmployees = async (req) => {
   //check if all employees in charge exists
   req.logger.verbose('Checking if all employees in charge exist');
   if (req.body.supervisedEmployees?.length > 0) {
