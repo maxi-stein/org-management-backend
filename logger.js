@@ -3,16 +3,18 @@ import config from 'config';
 
 const { combine, timestamp, printf, prettyPrint, errors } = winston.format;
 
+const customFormat = printf((info) => {
+  const baseMessage = `${info.timestamp} ${info.level}: ${info.message} (context: ${info.context})`;
+  return info.stack ? `${baseMessage}\n${info.stack}` : baseMessage;
+});
+
 export const logger = winston.createLogger({
   level: config.logger.console.level,
-  formats: combine(
+  format: combine(
     errors({ stack: true }),
     timestamp(),
     prettyPrint(),
-    printf(
-      (info) =>
-        `${info.timestamp} ${info.level}: ${info.message} (context: ${info.context})`,
-    ),
+    customFormat,
   ),
   transports: [
     new winston.transports.Console({
@@ -20,10 +22,7 @@ export const logger = winston.createLogger({
         errors({ stack: true }),
         timestamp(),
         winston.format.colorize(),
-        printf(
-          (info) =>
-            `${info.timestamp} ${info.level}: ${info.message} (context: ${info.context})`,
-        ),
+        customFormat,
       ),
     }),
     new winston.transports.File({ filename: 'api-errors.log', level: 'error' }),

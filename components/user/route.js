@@ -10,7 +10,6 @@ userRouter.post('/', validatePost, createUser);
 userRouter.put('/:id', updateUser);
 
 function toDate(input) {
-  req.logger.verbose('Converting ' + input + ' to Date');
   const [day, month, year] = input.split('/');
   return new Date(year, month, day);
 }
@@ -103,6 +102,7 @@ async function createUser(req, res, next) {
     delete userCreated.password;
     res.send(userCreated);
   } catch (err) {
+    req.logger.error(err);
     next(err);
   }
 }
