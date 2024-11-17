@@ -13,6 +13,7 @@ const schema = Joi.object({
     .required()
     .messages(requiredMsg('password')),
   role: Joi.string().required().messages(requiredMsg('role')),
+  employeesInCharge: Joi.array().items(Joi.string()),
   supervisor: Joi.string(),
   phone: Joi.string().required().messages(requiredMsg('phone')),
   bornDate: Joi.string()
