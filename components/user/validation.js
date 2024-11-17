@@ -12,9 +12,16 @@ const schema = Joi.object({
     .pattern(pattern)
     .required()
     .messages(requiredMsg('password')),
-  role: Joi.string().required().messages(requiredMsg('role')),
-  employeesInCharge: Joi.array().items(Joi.string()),
-  supervisor: Joi.string(),
+  role: Joi.object()
+    .keys({
+      _id: Joi.string().required().messages(requiredMsg('_id')),
+      name: Joi.string().required().messages(requiredMsg('name')),
+    })
+    .required()
+    .messages(requiredMsg('role')),
+  supervisedEmployees: Joi.array()
+    .items(Joi.string().length(24).hex().required())
+    .default([]),
   phone: Joi.string().required().messages(requiredMsg('phone')),
   bornDate: Joi.string()
     .required()

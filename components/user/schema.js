@@ -26,8 +26,7 @@ export const userSchema = new Schema(
       match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/,
     },
     role: { type: ObjectId, ref: 'Role', required: true },
-    employeesInCharge: [{ type: ObjectId, ref: 'User', default: [] }],
-
+    supervisedEmployees: { type: [ObjectId], ref: 'User', default: [] },
     phone: { type: String, trim: true, required: true },
     bornDate: { type: Date, required: true },
     isActive: { type: Boolean, default: true },
