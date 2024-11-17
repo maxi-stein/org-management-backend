@@ -12,13 +12,7 @@ const schema = Joi.object({
     .pattern(pattern)
     .required()
     .messages(requiredMsg('password')),
-  role: Joi.object()
-    .keys({
-      _id: Joi.string().required().messages(requiredMsg('_id')),
-      name: Joi.string().required().messages(requiredMsg('name')),
-    })
-    .required()
-    .messages(requiredMsg('role')),
+  role: Joi.string().length(24).hex().required().messages(requiredMsg('role')),
   supervisedEmployees: Joi.array()
     .items(Joi.string().length(24).hex().required())
     .default([]),
@@ -43,11 +37,16 @@ const schema = Joi.object({
 });
 
 export const validatePost = (req, res, next) => {
-  req.logger.verbose('Validating create user fields');
-  const { error } = schema.validate(req.body);
-  if (error) {
-    req.logger.error(error.details[0].message);
-    return res.status(400).json({ message: error.details[0].message });
+  try {
+    req.logger.verbose('Validating create user fields');
+    const { error } = schema.validate(req.body);
+    if (error) {
+      req.logger.error(error.details[0].message);
+      return res.status(400).json({ message: error.details[0].message });
+    }
+    next();
+  } catch (err) {
+    req.logger.error(err);
+    next(err);
   }
-  next();
 };
