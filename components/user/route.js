@@ -103,7 +103,8 @@ async function createUser(req, res, next) {
     req.logger.info('User created');
 
     delete userCreated.password;
-    res.send(userCreated);
+
+    res.status(200).send(userCreated);
   } catch (err) {
     req.logger.error(err);
     next(err);
@@ -158,7 +159,7 @@ async function updateUser(req, res, next) {
     req.logger.info('User updated');
 
     delete userToUpdate.password;
-    res.send(userToUpdate);
+    res.status(200).send(`Position with id ${req.params.id} updated.`);
   } catch (err) {
     req.logger.error(err);
     next(err);
