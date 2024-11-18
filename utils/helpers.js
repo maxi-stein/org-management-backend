@@ -20,3 +20,25 @@ export const validateSchema = (req, res, next, schema) => {
   }
   next();
 };
+
+export const validateDepartment = async (req, res, next, departmentId) => {
+  req.logger.verbose(`Validating if the department ${departmentId} exists.`);
+
+  try {
+    const departmentFound = await req
+      .model('Department')
+      .findById(departmentId);
+
+    if (!departmentFound) {
+      req.logger.error('Department not found');
+      return res
+        .status(404)
+        .send(`Department with id ${departmentId} not found.`);
+    }
+
+    req.logger.info('Department found.');
+  } catch (err) {
+    req.logger.error(err);
+    next(err);
+  }
+};

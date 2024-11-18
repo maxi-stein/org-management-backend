@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
-import { formatString } from '../../utils/helpers.js';
+import { formatString, validateDepartment } from '../../utils/helpers.js';
 
 export const positionRouter = new Router();
 positionRouter.get('/:id', getPosition);
@@ -17,7 +17,7 @@ async function getPosition(req, res, next) {
 
     if (!position) {
       req.logger.error('Position not found');
-      return res.status(404).send('Position does not exist.');
+      return res.status(404).send('Position not found.');
     }
 
     req.logger.info('Position found');
@@ -72,7 +72,7 @@ async function createPosition(req, res, next) {
       return res.status(400).send('Position already exists');
     }
 
-    await validateDepartment(req, res, req.body.department);
+    await validateDepartment(req, res, next, req.body.department);
 
     req.logger.verbose('Position does not exist. Creating new position.');
 
@@ -116,7 +116,7 @@ async function updatePosition(req, res, next) {
     );
 
     if (req.body.department) {
-      await validateDepartment(req, res, req.body.department);
+      await validateDepartment(req, res, next, req.body.department);
     }
 
     await positionFound.updateOne(req.body);
@@ -159,23 +159,3 @@ async function deletePosition(req, res, next) {
     next(err);
   }
 }
-
-const validateDepartment = async (req, res, departmentId) => {
-  req.logger.verbose(`Validating if the department ${departmentId} exists.`);
-
-  try {
-    const departmentFound = await req
-      .model('Department')
-      .findById(departmentId);
-
-    if (!departmentFound) {
-      req.logger.error('Department not found');
-      return res.status(404).send('Department not found.');
-    }
-
-    req.logger.info('Department found.');
-  } catch (err) {
-    req.logger.error(err);
-    next(err);
-  }
-};
