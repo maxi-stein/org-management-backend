@@ -4,7 +4,7 @@ import { requiredMsg } from '../../shared/validation.js';
 
 const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
-export const userSchemaValidation = Joi.object({
+const userSchemaValidation = Joi.object({
   firstName: Joi.string().required().messages(requiredMsg('firstName')),
   lastName: Joi.string().required().messages(requiredMsg('lastName')),
   email: Joi.string().email().required().messages(requiredMsg('email')),
@@ -35,3 +35,13 @@ export const userSchemaValidation = Joi.object({
   isActive: Joi.boolean().default(true),
   position: Joi.string(),
 });
+
+export const validatePost = (req, res, next) => {
+  req.logger.verbose('Validating create user fields');
+  const { error } = userSchemaValidation.validate(req.body);
+  if (error) {
+    req.logger.error(error.details[0].message);
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
+};
