@@ -1,19 +1,19 @@
 import mongoose from 'mongoose';
 
-export const areaSchema = new mongoose.Schema(
+const Schema = mongoose.Schema;
+const { ObjectId } = Schema.Types;
+
+export const areaSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
       unique: true,
-    },
-    description: {
-      type: String,
-      required: true,
+      trim: true,
     },
     departments: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: ObjectId,
         ref: 'Department',
       },
     ],
