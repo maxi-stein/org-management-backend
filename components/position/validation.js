@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { requiredMsg } from '../../shared/validation.js';
+import { requiredMsg, validateSchema } from '../../shared/helpers.js';
 
 const postPositionSchema = Joi.object().keys({
   title: Joi.string().required().messages(requiredMsg('title')),
@@ -16,21 +16,5 @@ const putPositionSchema = Joi.object().keys({
   department: Joi.string().length(24).hex(),
 });
 
-export const validatePost = (req, res, next) => {
-  req.logger.verbose('Validating create position fields');
-  const { error } = postPositionSchema.validate(req.body);
-  if (error) {
-    req.logger.error(error.details[0].message);
-    return res.status(400).json({ message: error.details[0].message });
-  }
-  next();
-};
-export const validatePut = (req, res, next) => {
-  req.logger.verbose('Validating put position fields');
-  const { error } = putPositionSchema.validate(req.body);
-  if (error) {
-    req.logger.error(error.details[0].message);
-    return res.status(400).json({ message: error.details[0].message });
-  }
-  next();
-};
+export const validatePost = validateSchema(req, res, next, postPositionSchema);
+export const validatePut = validateSchema(req, res, next, putPositionSchema);

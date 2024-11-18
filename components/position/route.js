@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
-import { formatString } from '../../utils/formating.js';
+import { formatString } from '../../utils/helpers.js';
 
 export const positionRouter = new Router();
 positionRouter.get('/:id', getPosition);

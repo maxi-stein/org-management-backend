@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { requiredMsg } from '../../shared/validation.js';
+import { requiredMsg, validateSchema } from '../../utils/helpers.js';
 
 const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
@@ -64,22 +64,5 @@ const putUserSchema = Joi.object({
   position: Joi.string().length(24).hex(),
 });
 
-export const validatePost = (req, res, next) => {
-  req.logger.verbose('Validating create user fields');
-  const { error } = postUserSchema.validate(req.body);
-  if (error) {
-    req.logger.error(error.details[0].message);
-    return res.status(400).json({ message: error.details[0].message });
-  }
-  next();
-};
-
-export const validatePut = (req, res, next) => {
-  req.logger.verbose('Validating create user fields');
-  const { error } = putUserSchema.validate(req.body);
-  if (error) {
-    req.logger.error(error.details[0].message);
-    return res.status(400).json({ message: error.details[0].message });
-  }
-  next();
-};
+export const validatePost = validateSchema(req, res, next, postUserSchema);
+export const validatePut = validateSchema(req, res, next, putUserSchema);
