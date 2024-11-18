@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
-import { validatePost } from './validation.js';
+import { validatePost, validatePut } from './validation.js';
 import { mongoose } from 'mongoose';
 
 export const userRouter = new Router();
@@ -8,7 +8,7 @@ export const userRouter = new Router();
 userRouter.get('/', getAllUsers);
 userRouter.get('/:id', getUserById);
 userRouter.post('/', validatePost, createUser);
-userRouter.put('/:id', updateUser);
+userRouter.put('/:id', validatePut, updateUser);
 
 function toDate(input) {
   const [day, month, year] = input.split('/');
@@ -92,12 +92,18 @@ async function createUser(req, res, next) {
 
     const passEncrypted = await bcrypt.hash(password, 10);
 
-    await checkSupervisedEmployees(req);
+    const supervisedEmployees = filterSupervisedEmployees(
+      req,
+      req.body.supervisedEmployees,
+    );
+
+    await checkSupervisedEmployees(req, supervisedEmployees);
 
     const userCreated = await req.model('User').create({
       ...req.body,
       bornDate: toDate(bornDate),
       password: passEncrypted,
+      supervisedEmployees: supervisedEmployees,
     });
 
     req.logger.info('User created');
@@ -135,7 +141,15 @@ async function updateUser(req, res, next) {
       return res.status(404).send('User not found');
     }
 
-    await checkSupervisedEmployees(req);
+    const supervisedEmployees = filterSupervisedEmployees(
+      req,
+      req.body.supervisedEmployees,
+    );
+
+    if (supervisedEmployees.length > 0) {
+      await checkSupervisedEmployees(req, supervisedEmployees);
+      req.body.supervisedEmployees = supervisedEmployees;
+    }
 
     if (req.body.role) {
       req.logger.verbose('Checking role');
@@ -166,32 +180,36 @@ async function updateUser(req, res, next) {
   }
 }
 
-const checkSupervisedEmployees = async (req) => {
-  //check if all employees in charge exists
-  req.logger.verbose('Checking if all employees in charge exist');
-  if (req.body.supervisedEmployees?.length > 0) {
-    //filter duplicates ids
-    req.body.supervisedEmployees = Array.from(
-      new Set(req.body.supervisedEmployees),
-    );
-    //eliminate self id (buisness rule)
-    req.body.supervisedEmployees = req.body.supervisedEmployees.filter(
-      (id) => id !== req.user._id,
-    );
+const filterSupervisedEmployees = (req, supervisedEmployees) => {
+  //filter duplicates ids
+  let filteredIds = Array.from(new Set(supervisedEmployees));
 
-    const supervisedEmployeesIds = req.body.supervisedEmployees.map(
-      (id) => new mongoose.Types.ObjectId(id),
-    );
+  //eliminate self id (buisness rule)
+  filteredIds = filteredIds.filter((id) => id !== req.user._id);
+
+  if (filteredIds.length === 0) {
+    return [];
+  }
+
+  //casting all ids to objectId
+  return filteredIds.map((id) => new mongoose.Types.ObjectId(id));
+};
+
+const checkSupervisedEmployees = async (req, supervisedEmployees) => {
+  if (supervisedEmployees.length > 0) {
+    req.logger.verbose('Checking if all employees in charge exist');
+
+    //Getting all the employees
     const employees = await req
       .model('User')
       .find({
-        _id: { $in: supervisedEmployeesIds },
+        _id: { $in: supervisedEmployees },
       })
       .select('_id');
 
-    if (employees.length !== supervisedEmployeesIds.length) {
-      console.log('entro error');
-      const missingIds = supervisedEmployeesIds.filter(
+    //Checking if all the employees exist
+    if (employees.length !== supervisedEmployees.length) {
+      const missingIds = supervisedEmployees.filter(
         (id) => !employees.some((employee) => employee._id.equals(id)),
       );
       throw new Error(
