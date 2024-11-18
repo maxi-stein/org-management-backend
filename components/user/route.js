@@ -1,7 +1,17 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
-import { validatePost } from './validation.js';
+import { userSchemaValidation } from './validation.js';
 import { mongoose } from 'mongoose';
+
+const validatePost = (req, res, next) => {
+  req.logger.verbose('Validating create user fields');
+  const { error } = userSchemaValidation.validate(req.body);
+  if (error) {
+    req.logger.error(error.details[0].message);
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
+};
 
 export const userRouter = new Router();
 
