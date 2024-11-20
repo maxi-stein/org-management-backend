@@ -1,6 +1,10 @@
+import { required } from 'joi';
 import mongoose from 'mongoose';
 
-export const departmentSchema = new mongoose.Schema(
+const Schema = mongoose.Schema;
+const { ObjectId } = Schema.Types;
+
+export const departmentSchema = new Schema(
   {
     name: {
       type: String,
@@ -10,11 +14,16 @@ export const departmentSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true,
+      trim: true,
+      minlength: 10,
+      maxlength: 200,
     },
-    area: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Area',
-      required: true, // Every departement belongs to an area
+    //head of department
+    head: {
+      type: ObjectId,
+      ref: 'User',
+      required: true,
+      unique: true,
     },
   },
   { timestamps: true },
