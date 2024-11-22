@@ -13,7 +13,10 @@ async function getPosition(req, res, next) {
   try {
     req.logger.info('getPosition with id: ' + req.params.id);
 
-    const position = await req.model('Position').findById(req.params.id);
+    const position = await req
+      .model('Position')
+      .findById(req.params.id)
+      .populate({ path: 'department', select: '_id name' });
 
     if (!position) {
       req.logger.error('Position not found');
@@ -33,7 +36,10 @@ async function getPositions(req, res, next) {
   try {
     req.logger.info('getPositions');
 
-    const positions = await req.model('Position').find();
+    const positions = await req
+      .model('Position')
+      .find()
+      .populate({ path: 'department', select: '_id name' });
 
     req.logger.info('Positions found');
 
