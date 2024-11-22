@@ -27,7 +27,10 @@ async function getAllUsers(req, res, next) {
     const users = await req
       .model('User')
       .find({ isActive: true })
-      .populate('role', '_id name');
+      .populate([
+        { path: 'role', select: '_id name' },
+        { path: 'supervisedEmployees', select: '_id firstName lastName' },
+      ]);
     req.logger.info('Found ' + users.length + ' users');
     res.send(users);
   } catch (err) {
