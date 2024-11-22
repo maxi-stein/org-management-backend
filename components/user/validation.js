@@ -1,5 +1,4 @@
 import Joi from 'joi';
-
 import { requiredMsg, validateSchema } from '../../utils/helpers.js';
 
 const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
@@ -64,5 +63,7 @@ const putUserSchema = Joi.object({
   position: Joi.string().length(24).hex(),
 });
 
-export const validatePost = validateSchema(req, res, next, postUserSchema);
-export const validatePut = validateSchema(req, res, next, putUserSchema);
+export const validatePost = (req, res, next) =>
+  validateSchema(req, res, next, postUserSchema);
+export const validatePut = (req, res, next) =>
+  validateSchema(req, res, next, putUserSchema);

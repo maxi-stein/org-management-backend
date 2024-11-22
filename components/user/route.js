@@ -24,7 +24,10 @@ async function getAllUsers(req, res, next) {
 
   req.logger.verbose('Finding all users');
   try {
-    const users = await req.model('User').find({ isActive: true });
+    const users = await req
+      .model('User')
+      .find({ isActive: true })
+      .populate('role', '_id name');
     req.logger.info('Found ' + users.length + ' users');
     res.send(users);
   } catch (err) {

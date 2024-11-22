@@ -10,5 +10,7 @@ const putAreaSchema = Joi.object().keys({
   departments: Joi.array().items(Joi.string().length(24).hex().required()),
 });
 
-export const validatePost = validateSchema(req, res, next, postAreaSchema);
-export const validatePut = validateSchema(req, res, next, putAreaSchema);
+export const validatePost = (req, res, next) =>
+  validateSchema(req, res, next, postAreaSchema);
+export const validatePut = (req, res, next) =>
+  validateSchema(req, res, next, putAreaSchema);

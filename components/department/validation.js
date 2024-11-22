@@ -23,4 +23,5 @@ export const validatePost = validateSchema(
   next,
   postDepartmentSchema,
 );
-export const validatePut = validateSchema(req, res, next, putDepartmentSchema);
+export const validatePut = (req, res, next) =>
+  validateSchema(req, res, next, putDepartmentSchema);
