@@ -30,6 +30,7 @@ async function getAllUsers(req, res, next) {
       .populate([
         { path: 'role', select: '_id name' },
         { path: 'supervisedEmployees', select: '_id firstName lastName' },
+        { path: 'position', select: '_id title level' },
       ]);
     req.logger.info('Found ' + users.length + ' users');
     res.send(users);
@@ -55,7 +56,11 @@ async function getUserById(req, res, next) {
     const user = await req
       .model('User')
       .findById(req.params.id)
-      .populate('role');
+      .populate([
+        { path: 'role', select: '_id name' },
+        { path: 'supervisedEmployees', select: '_id firstName lastName' },
+        { path: 'position', select: '_id title level' },
+      ]);
 
     if (!user) {
       req.logger.error('User not found');
