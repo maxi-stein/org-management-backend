@@ -78,7 +78,7 @@ async function createPosition(req, res, next) {
       return res.status(400).send('Position already exists');
     }
 
-    await validateDepartment(req, res, next, req.body.department);
+    await validateDepartment(req, req.body.department);
 
     req.logger.verbose('Position does not exist. Creating new position.');
 
@@ -122,7 +122,7 @@ async function updatePosition(req, res, next) {
     );
 
     if (req.body.department) {
-      await validateDepartment(req, res, next, req.body.department);
+      await validateDepartment(req, req.body.department);
     }
 
     await positionFound.updateOne(req.body);

@@ -69,7 +69,7 @@ async function createDepartment(req, res, next) {
 
     req.logger.info('Department name available for creation.');
 
-    await validateHeadOfDepartment(req, res, next, req.body.head);
+    await validateHeadOfDepartment(req, req.body.head);
 
     req.logger.verbose(
       'Head of Department is available. Creating new department.',
@@ -119,7 +119,7 @@ async function updateDepartment(req, res, next) {
       req.logger.verbose(
         'Validating if the head of department does not belong to another department.',
       );
-      await validateHeadOfDepartment(req, res, next, req.body.head);
+      await validateHeadOfDepartment(req, req.body.head);
     }
 
     await departmentFound.updateOne(req.body);
