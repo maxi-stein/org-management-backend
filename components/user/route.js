@@ -119,9 +119,14 @@ async function createUser(req, res, next) {
 
     req.logger.info('User created');
 
-    delete userCreated.password;
+    //does not work
+    //delete userCreated.password;
 
-    res.status(200).send(userCreated);
+    const userWithoutPassword = await req
+      .model('User')
+      .findById(userCreated._id);
+
+    res.status(200).send(userWithoutPassword);
   } catch (err) {
     req.logger.error(err);
     next(err);
