@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { requiredMsg } from '../../utils/helpers.js';
+import { requiredMsg, validateSchema } from '../../utils/helpers.js';
 
 export const postDepartmentSchema = Joi.object({
   name: Joi.string().required().messages(requiredMsg('name')),
@@ -17,11 +17,7 @@ export const putDepartmentSchema = Joi.object({
   head: Joi.string().length(24).hex(),
 });
 
-export const validatePost = validateSchema(
-  req,
-  res,
-  next,
-  postDepartmentSchema,
-);
+export const validatePost = (req, res, next) =>
+  validateSchema(req, res, next, postDepartmentSchema);
 export const validatePut = (req, res, next) =>
   validateSchema(req, res, next, putDepartmentSchema);

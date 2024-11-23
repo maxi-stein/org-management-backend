@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { formatString, validateHeadOfDepartment } from '../../utils/helpers.js';
+import { validatePost, validatePut } from './validation.js';
 
 export const departmentRouter = new Router();
 departmentRouter.get('/:id', getDepartment);
@@ -8,7 +9,7 @@ departmentRouter.post('/', validatePost, createDepartment);
 departmentRouter.put('/:id', validatePut, updateDepartment);
 departmentRouter.delete('/:id', deleteDepartment);
 
-const getDepartment = async (req, res, next) => {
+async function getDepartment(req, res, next) {
   req.logger.info(`getDepartment with id: ${req.params.id}`);
 
   try {
@@ -25,13 +26,16 @@ const getDepartment = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+}
 
 async function getDepartments(req, res, next) {
   try {
     req.logger.info('getDepartments');
 
-    const departments = await req.model('Department').find();
+    const departments = await req
+      .model('Department')
+      .find()
+      .populate('head', '_id firstName lastName');
 
     req.logger.info('Departments found');
 
@@ -63,9 +67,7 @@ async function createDepartment(req, res, next) {
       return res.status(400).send('Department already exists');
     }
 
-    req.logger.verbose(
-      'Department does not exist. Validating if the head of department does not belong to another department.',
-    );
+    req.logger.info('Department name available for creation.');
 
     validateHeadOfDepartment(req, res, next, req.body.head);
 
@@ -117,7 +119,7 @@ async function updateDepartment(req, res, next) {
       req.logger.verbose(
         'Validating if the head of department does not belong to another department.',
       );
-      validateHeadOfDepartment(req, res, next, req.body.head);
+      await validateHeadOfDepartment(req, res, next, req.body.head);
     }
 
     await departmentFound.updateOne(req.body);

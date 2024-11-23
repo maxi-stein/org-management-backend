@@ -44,23 +44,26 @@ export const validateDepartment = async (req, res, next, departmentId) => {
 };
 
 export const validateHeadOfDepartment = async (req, res, next, headId) => {
+  req.logger.verbose('Validating if the head exists');
+  const foundHead = await req.model('User').findById(req.body.head);
+
+  if (!foundHead) {
+    req.logger.error('Head of Department not found');
+    throw new Error('Head of Department not found.');
+  }
+
+  req.logger.info('Head of Department found.');
+
   req.logger.verbose(
     `Validating if the head ${headId} does not belong to another department.`,
   );
 
-  try {
-    const department = await req.model('Department').findOne({ head: headId });
-
-    if (department) {
-      req.logger.error('Head already belongs to another department');
-      return res
-        .status(400)
-        .send(`Head with id ${headId} already belongs to another department.`);
-    }
-
-    req.logger.info('Head does not belong to another department.');
-  } catch (err) {
-    req.logger.error(err);
-    next(err);
+  const department = await req.model('Department').findOne({ head: headId });
+  if (department) {
+    throw new Error(
+      `Head with id ${headId} already belongs to another department.`,
+    );
   }
+
+  req.logger.info('Head does not belong to another department.');
 };
