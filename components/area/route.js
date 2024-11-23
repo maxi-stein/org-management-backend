@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
 import { formatString, validateDepartment } from '../../utils/helpers.js';
+import { mongoose } from 'mongoose';
 
 export const areaRouter = new Router();
 areaRouter.get('/:id', getArea);
@@ -63,11 +64,15 @@ async function createArea(req, res, next) {
       return res.status(400).send('Area already exists');
     }
 
+    req.logger.info('Area name available for creation.');
+
     await Promise.all(
-      req.body.deparments.map((department) =>
-        validateDepartment(req, res, next, department),
+      req.body.departments.map((department) =>
+        validateDepartment(req, department),
       ),
     );
+
+    req.body.departments = filterDepartments(req.body.departments);
 
     req.logger.verbose('Area does not exist. Creating new area.');
 
@@ -113,9 +118,10 @@ async function updateArea(req, res, next) {
     if (req.body.departments) {
       await Promise.all(
         req.body.departments.map((department) =>
-          validateDepartment(req, res, next, department),
+          validateDepartment(req, department),
         ),
       );
+      req.body.departments = filterDepartments(req.body.departments);
     }
 
     await areaFound.updateOne(req.body);
@@ -158,3 +164,15 @@ async function deleteArea(req, res, next) {
     next(err);
   }
 }
+
+const filterDepartments = (departments) => {
+  //filter duplicates ids
+  let filteredIds = Array.from(new Set(departments));
+
+  if (filteredIds.length === 0) {
+    return [];
+  }
+
+  //casting all ids to objectId
+  return filteredIds.map((id) => new mongoose.Types.ObjectId(id));
+};

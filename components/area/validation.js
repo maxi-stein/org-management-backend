@@ -3,7 +3,11 @@ import { requiredMsg, validateSchema } from '../../utils/helpers.js';
 
 const postAreaSchema = Joi.object().keys({
   name: Joi.string().required().messages(requiredMsg('name')),
-  departments: Joi.array().items(Joi.string().length(24).hex().required()),
+  departments: Joi.array()
+    .items(Joi.string().length(24).hex().required())
+    .min(1)
+    .required()
+    .messages(requiredMsg('departments')),
 });
 const putAreaSchema = Joi.object().keys({
   name: Joi.string(),
