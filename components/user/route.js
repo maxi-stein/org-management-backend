@@ -2,6 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import { validatePost, validatePut } from './validation.js';
 import { mongoose } from 'mongoose';
+import { paginateModel } from '../../utils/helpers.js';
 
 export const userRouter = new Router();
 
@@ -22,17 +23,25 @@ async function getAllUsers(req, res, next) {
     return res.status(403).send('Unauthorized role');
   }
 
+  const { page, limit } = req;
+
   req.logger.verbose('Finding all users');
   try {
-    const users = await req
-      .model('User')
-      .find({ isActive: true })
-      .populate([
-        { path: 'role', select: '_id name' },
-        { path: 'supervisedEmployees', select: '_id firstName lastName' },
-        { path: 'position', select: '_id title level' },
-      ]);
-    req.logger.info('Found ' + users.length + ' users');
+    const users = await paginateModel(
+      req.model('User'),
+      {},
+      {
+        page,
+        limit,
+        populate: [
+          { path: 'role', select: '_id name' },
+          { path: 'supervisedEmployees', select: '_id firstName lastName' },
+          { path: 'position', select: '_id title level' },
+        ],
+      },
+    );
+
+    req.logger.info('Found ' + users.data.length + ' users');
     res.send(users);
   } catch (err) {
     req.logger.error(err);
@@ -53,19 +62,27 @@ async function getUserById(req, res, next) {
 
   try {
     req.logger.verbose('Finding user');
-    const user = await req
-      .model('User')
-      .findById(req.params.id)
-      .populate([
-        { path: 'role', select: '_id name' },
-        { path: 'supervisedEmployees', select: '_id firstName lastName' },
-        { path: 'position', select: '_id title level' },
-      ]);
+    const user = await paginateModel(
+      req.model('User'),
+      { _id: req.params.id },
+      {
+        populate: [
+          { path: 'role', select: '_id name' },
+          { path: 'supervisedEmployees', select: '_id firstName lastName' },
+          { path: 'position', select: '_id title level' },
+        ],
+      },
+    );
 
-    if (!user) {
+    if (!user.data) {
       req.logger.error('User not found');
       return res.status(404).send('User not found');
     }
+
+    user.data.supervisedEmployees = await populateSupervisedEmployees(
+      req,
+      user.data.supervisedEmployees,
+    );
 
     req.logger.info('User found');
     res.send(user);
@@ -85,8 +102,8 @@ async function createUser(req, res, next) {
   const { email, password, role, bornDate } = req.body;
 
   try {
-    const userExists = await req.model('User').findOne({ email });
-    if (userExists) {
+    const userExists = await paginateModel(req.model('User'), { email });
+    if (userExists.data.length > 0) {
       req.logger.error('User already exists');
       return res.status(400).send('User already exists');
     }
@@ -234,3 +251,36 @@ const checkSupervisedEmployees = async (req, supervisedEmployees) => {
     }
   }
 };
+
+async function populateSupervisedEmployees(req, supervisedEmployees) {
+  // If there are no supervised employees, return the empty array
+  if (!supervisedEmployees || supervisedEmployees.length === 0) {
+    return [];
+  }
+
+  // Get the supervised employees
+  const employees = await req
+    .model('User')
+    .find({ _id: { $in: supervisedEmployees } })
+    .populate([
+      { path: 'role', select: '_id name' },
+      { path: 'position', select: '_id title level' },
+      { path: 'supervisedEmployees', select: '_id firstName lastName' },
+    ]);
+
+  // Populate the supervised employees recursively
+  await Promise.all(
+    employees.map(async (employee) => {
+      if (
+        employee.supervisedEmployees &&
+        employee.supervisedEmployees.length > 0
+      ) {
+        employee.supervisedEmployees = await populateSupervisedEmployees(
+          employee.supervisedEmployees,
+        );
+      }
+    }),
+  );
+
+  return employees;
+}

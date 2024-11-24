@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { formatString, validateHeadOfDepartment } from '../../utils/helpers.js';
+import {
+  formatString,
+  validateHeadOfDepartment,
+  paginateModel,
+} from '../../utils/helpers.js';
 import { validatePost, validatePut } from './validation.js';
 
 export const departmentRouter = new Router();
@@ -13,8 +17,11 @@ async function getDepartment(req, res, next) {
   req.logger.info(`getDepartment with id: ${req.params.id}`);
 
   try {
-    const department = await req.model('Department').findById(req.params.id);
-
+    const department = await paginateModel(
+      req.model('Department'),
+      { _id: req.params.id },
+      { populate: [{ path: 'head', select: '_id firstName lastName' }] },
+    );
     if (!department) {
       req.logger.error('Department not found');
       return res.status(404).send('Department not found.');
@@ -29,13 +36,20 @@ async function getDepartment(req, res, next) {
 }
 
 async function getDepartments(req, res, next) {
-  try {
-    req.logger.info('getDepartments');
+  req.logger.info('getDepartments');
 
-    const departments = await req
-      .model('Department')
-      .find()
-      .populate('head', '_id firstName lastName');
+  const { page, limit } = req;
+
+  try {
+    const departments = await paginateModel(
+      req.model('Department'),
+      {},
+      {
+        page,
+        limit,
+        populate: [{ path: 'head', select: '_id firstName lastName' }],
+      },
+    );
 
     req.logger.info('Departments found');
 

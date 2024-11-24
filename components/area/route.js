@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
-import { formatString, validateDepartment } from '../../utils/helpers.js';
+import {
+  formatString,
+  validateDepartment,
+  paginateModel,
+} from '../../utils/helpers.js';
 import { mongoose } from 'mongoose';
 
 export const areaRouter = new Router();
@@ -11,20 +15,20 @@ areaRouter.put('/:id', validatePut, updateArea);
 areaRouter.delete('/:id', deleteArea);
 
 async function getArea(req, res, next) {
-  try {
-    req.logger.info('getArea with id: ' + req.params.id);
+  req.logger.info('getArea with id: ' + req.params.id);
 
-    const area = await req
-      .model('Area')
-      .findById(req.params.id)
-      .populate({
-        path: 'departments',
-        select: '_id name head',
+  try {
+    const area = await paginateModel(
+      req.model('Area'),
+      { _id: req.params.id },
+      {
         populate: {
-          path: 'head',
-          select: '_id firstName lastName',
+          path: 'departments',
+          select: '_id name head',
+          populate: { path: 'head', select: '_id firstName lastName' },
         },
-      });
+      },
+    );
 
     if (!area) {
       req.logger.error('Area not found');
@@ -41,20 +45,27 @@ async function getArea(req, res, next) {
 }
 
 async function getAreas(req, res, next) {
-  try {
-    req.logger.info('getAreas');
+  req.logger.info('getAreas');
 
-    const areas = await req
-      .model('Area')
-      .find()
-      .populate({
-        path: 'departments',
-        select: '_id name head',
+  const { page, limit } = req;
+
+  try {
+    const areas = await paginateModel(
+      req.model('Area'),
+      {},
+      {
+        page,
+        limit,
         populate: {
-          path: 'head',
-          select: '_id firstName lastName',
+          path: 'departments',
+          select: '_id name head',
+          populate: {
+            path: 'head',
+            select: '_id firstName lastName',
+          },
         },
-      });
+      },
+    );
 
     req.logger.info('Areas found');
 

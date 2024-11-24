@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
-import { formatString, validateDepartment } from '../../utils/helpers.js';
+import { formatString, paginateModel } from '../../utils/helpers.js';
 
 export const positionRouter = new Router();
 positionRouter.get('/:id', getPosition);
@@ -10,15 +10,16 @@ positionRouter.put('/:id', validatePut, updatePosition);
 positionRouter.delete('/:id', deletePosition);
 
 async function getPosition(req, res, next) {
+  req.logger.info('getPosition with id: ' + req.params.id);
+
   try {
-    req.logger.info('getPosition with id: ' + req.params.id);
+    const position = await paginateModel(
+      req.model('Position'),
+      { _id: req.params.id },
+      {},
+    );
 
-    const position = await req
-      .model('Position')
-      .findById(req.params.id)
-      .populate({ path: 'department', select: '_id name' });
-
-    if (!position) {
+    if (!position.data.length > 0) {
       req.logger.error('Position not found');
       return res.status(404).send('Position not found.');
     }
@@ -33,13 +34,16 @@ async function getPosition(req, res, next) {
 }
 
 async function getPositions(req, res, next) {
-  try {
-    req.logger.info('getPositions');
+  req.logger.info('getPositions');
 
-    const positions = await req
-      .model('Position')
-      .find()
-      .populate({ path: 'department', select: '_id name' });
+  const { page, limit } = req;
+
+  try {
+    const positions = await paginateModel(
+      req.model('Position'),
+      {},
+      { page, limit },
+    );
 
     req.logger.info('Positions found');
 
@@ -77,8 +81,6 @@ async function createPosition(req, res, next) {
       req.logger.error('Position already exists');
       return res.status(400).send('Position already exists');
     }
-
-    await validateDepartment(req, req.body.department);
 
     req.logger.verbose('Position does not exist. Creating new position.');
 
@@ -120,10 +122,6 @@ async function updatePosition(req, res, next) {
       (field) =>
         req.body[field] && (req.body[field] = formatString(req.body[field])),
     );
-
-    if (req.body.department) {
-      await validateDepartment(req, req.body.department);
-    }
 
     await positionFound.updateOne(req.body);
 
