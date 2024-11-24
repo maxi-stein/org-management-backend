@@ -4,11 +4,6 @@ export const positionSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     level: { type: String, trim: true, default: null }, //Junior, Semi-Senior, Senior, etc.
-    department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Department',
-      required: true,
-    },
   },
   { timestamps: true },
 );
