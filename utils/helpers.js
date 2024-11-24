@@ -58,3 +58,31 @@ export const validateHeadOfDepartment = async (req, headId) => {
 
   req.logger.info('Head does not belong to another department.');
 };
+
+export const paginateModel = async (Model, query = {}, options = {}) => {
+  const { offset = 1, limit = 10, populate = [], sort = '_id' } = options;
+
+  const pageNumber = parseInt(offset);
+  const pageSize = parseInt(limit);
+  const skip = (pageNumber - 1) * pageSize;
+
+  const data = await Model.find(query) // query filters
+    .skip(skip)
+    .limit(pageSize)
+    .sort(sort)
+    .populate(populate)
+    .exec();
+
+  // Contamos el total de documentos sin la paginación
+  const total = await Model.countDocuments(query);
+
+  return {
+    data,
+    pagination: {
+      page: pageNumber,
+      limit: pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    },
+  };
+};
