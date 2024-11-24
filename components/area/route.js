@@ -14,7 +14,17 @@ async function getArea(req, res, next) {
   try {
     req.logger.info('getArea with id: ' + req.params.id);
 
-    const area = await req.model('Area').findById(req.params.id);
+    const area = await req
+      .model('Area')
+      .findById(req.params.id)
+      .populate({
+        path: 'departments',
+        select: '_id name head',
+        populate: {
+          path: 'head',
+          select: '_id firstName lastName',
+        },
+      });
 
     if (!area) {
       req.logger.error('Area not found');
@@ -34,7 +44,17 @@ async function getAreas(req, res, next) {
   try {
     req.logger.info('getAreas');
 
-    const areas = await req.model('Area').find();
+    const areas = await req
+      .model('Area')
+      .find()
+      .populate({
+        path: 'departments',
+        select: '_id name head',
+        populate: {
+          path: 'head',
+          select: '_id firstName lastName',
+        },
+      });
 
     req.logger.info('Areas found');
 
