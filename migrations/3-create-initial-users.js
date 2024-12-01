@@ -31,7 +31,7 @@ const initialUsers = [
     phone: '(+54) 9 1176801234',
     bornDate: new Date(1985, 1, 15),
     isActive: true,
-    position: new ObjectId('000000000000000000000000'),
+    position: new ObjectId('000000000000000000000001'),
     __v: 0,
   },
   //Organizational Development
@@ -46,7 +46,7 @@ const initialUsers = [
     phone: '(+54) 9 1176805678',
     bornDate: new Date(1990, 6, 22),
     isActive: true,
-    position: new ObjectId('000000000000000000000000'),
+    position: new ObjectId('000000000000000000000001'),
     __v: 0,
   },
   //Software Development
@@ -61,7 +61,7 @@ const initialUsers = [
     phone: '(+54) 9 1176809876',
     bornDate: new Date(1988, 11, 30),
     isActive: true,
-    position: new ObjectId('000000000000000000000000'),
+    position: new ObjectId('000000000000000000000001'),
     __v: 0,
   },
   //Infrastructure
@@ -79,7 +79,7 @@ const initialUsers = [
     phone: '(+54) 9 1176806543',
     bornDate: new Date(1995, 3, 10),
     isActive: true,
-    position: new ObjectId('000000000000000000000000'),
+    position: new ObjectId('000000000000000000000001'),
     __v: 0,
   },
   //Technical Support
@@ -94,7 +94,7 @@ const initialUsers = [
     phone: '(+54) 9 1176805432',
     bornDate: new Date(1982, 8, 25),
     isActive: true,
-    position: new ObjectId('000000000000000000000000'),
+    position: new ObjectId('000000000000000000000001'),
     __v: 0,
   },
   //Customer Service
@@ -109,7 +109,7 @@ const initialUsers = [
     phone: '(+54) 9 1176804321',
     bornDate: new Date(1993, 2, 5),
     isActive: true,
-    position: new ObjectId('000000000000000000000000'),
+    position: new ObjectId('000000000000000000000001'),
     __v: 0,
   },
   // ** EMPLOYEES **
@@ -173,7 +173,7 @@ const initialUsers = [
     _id: new ObjectId('000000000000000000000012'),
     firstName: 'Susan',
     lastName: 'Williams',
-    email: 'frank.taylor@company.com',
+    email: 'susan.williams@company.com',
     password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
     role: new ObjectId('000000000000000000000001'), // Client
     supervisedEmployees: [],

@@ -24,7 +24,7 @@ async function getArea(req, res, next) {
       {
         populate: {
           path: 'departments',
-          select: '_id name head',
+          select: '_id name description head',
           populate: { path: 'head', select: '_id firstName lastName' },
         },
       },
@@ -58,7 +58,7 @@ async function getAreas(req, res, next) {
         limit,
         populate: {
           path: 'departments',
-          select: '_id name head',
+          select: '_id name description head',
           populate: {
             path: 'head',
             select: '_id firstName lastName',

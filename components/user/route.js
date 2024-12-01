@@ -7,6 +7,7 @@ import { paginateModel } from '../../utils/helpers.js';
 export const userRouter = new Router();
 
 userRouter.get('/', getAllUsers);
+userRouter.get('/heads', getHeadOfDepartments);
 userRouter.get('/:id', getUserById);
 userRouter.post('/', validatePost, createUser);
 userRouter.put('/:id', validatePut, updateUser);
@@ -86,6 +87,40 @@ async function getUserById(req, res, next) {
 
     req.logger.info('User found');
     res.send(user);
+  } catch (err) {
+    req.logger.error(err);
+    next(err);
+  }
+}
+
+async function getHeadOfDepartments(req, res, next) {
+  req.logger.info('getHeadOfDepartments');
+
+  if (!req.isAdmin()) {
+    return res.status(403).send('Unauthorized role');
+  }
+
+  try {
+    req.logger.verbose('Finding head of departments');
+    const headOfDepartments = await paginateModel(
+      req.model('User'),
+      { position: '000000000000000000000001' }, //head of department
+      {
+        populate: [
+          { path: 'role', select: '_id name' },
+          { path: 'supervisedEmployees', select: '_id firstName lastName' },
+          { path: 'position', select: '_id title level' },
+        ],
+      },
+    );
+
+    if (!headOfDepartments.data) {
+      req.logger.error('Head of departments not found');
+      return res.status(404).send('Head of departments not found');
+    }
+
+    req.logger.info('Head of departments found');
+    res.send(headOfDepartments);
   } catch (err) {
     req.logger.error(err);
     next(err);

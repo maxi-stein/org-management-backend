@@ -3,6 +3,13 @@ import mongodb from 'mongodb';
 const { ObjectId } = mongodb;
 
 const initialPositions = [
+  //** Admin Positions **
+  {
+    _id: new ObjectId('000000000000000000000000'),
+    title: 'Administrator',
+    level: null,
+    __v: 0,
+  },
   {
     _id: new ObjectId('000000000000000000000001'),
     title: 'Head of Department',
