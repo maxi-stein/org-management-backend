@@ -129,7 +129,7 @@ async function updateDepartment(req, res, next) {
       req.body.name = formatString(req.body.name);
     }
 
-    if (req.body.head) {
+    if (req.body.head && req.body.head != departmentFound.head._id) {
       req.logger.verbose(
         'Validating if the head of department does not belong to another department.',
       );
