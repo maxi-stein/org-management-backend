@@ -15,7 +15,6 @@ export const departmentSchema = new Schema(
       required: true,
       trim: true,
       minlength: 10,
-      maxlength: 200,
     },
     //head of department
     head: {
