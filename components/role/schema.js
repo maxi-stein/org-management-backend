@@ -11,6 +11,12 @@ export const roleSchema = new Schema(
       trim: true,
       unique: true,
     },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 10,
+    },
   },
   { timestamps: true },
 );
