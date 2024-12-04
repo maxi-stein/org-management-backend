@@ -1,6 +1,9 @@
 export const formatString = (str) => {
-  const newString = str.toLowerCase();
-  return newString.charAt(0).toUpperCase() + newString.slice(1);
+  if (str) {
+    const newString = str.toLowerCase();
+    return newString.charAt(0).toUpperCase() + newString.slice(1);
+  }
+  return '';
 };
 
 export const requiredMsg = (label) => ({
@@ -16,7 +19,7 @@ export const validateSchema = (req, res, next, schema) => {
   const { error } = schema.validate(req.body);
   if (error) {
     req.logger.error(error.details[0].message);
-    return res.status(400).json({ message: error.details[0].message });
+    throwError(error.details[0].message, 400);
   }
   next();
 };
@@ -28,7 +31,7 @@ export const validateDepartment = async (req, departmentId) => {
 
   if (!departmentFound) {
     req.logger.error('Department not found');
-    throw new Error(`Department with id ${departmentId} not found.`);
+    throwError(`Department with id ${departmentId} not found.`, 404);
   }
 
   req.logger.info('Department found.');
@@ -40,7 +43,7 @@ export const validateHeadOfDepartment = async (req, headId) => {
 
   if (!foundHead) {
     req.logger.error('Head of Department not found');
-    throw new Error('Head of Department not found.');
+    throwError('Head of Department not found', 404);
   }
 
   req.logger.info('Head of Department found.');
@@ -51,8 +54,9 @@ export const validateHeadOfDepartment = async (req, headId) => {
 
   const department = await req.model('Department').findOne({ head: headId });
   if (department) {
-    throw new Error(
+    throwError(
       `Head with id ${headId} already belongs to another department.`,
+      400,
     );
   }
 
@@ -85,4 +89,10 @@ export const paginateModel = async (Model, query = {}, options = {}) => {
       totalPages: Math.ceil(total / pageSize),
     },
   };
+};
+
+export const throwError = (message, status) => {
+  const error = new Error(message);
+  error.statusCode = status;
+  throw error;
 };

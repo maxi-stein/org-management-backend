@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
-import { formatString, paginateModel } from '../../utils/helpers.js';
+import {
+  formatString,
+  paginateModel,
+  throwError,
+} from '../../utils/helpers.js';
 
 export const positionRouter = new Router();
 positionRouter.get('/:id', getPosition);
@@ -21,7 +25,7 @@ async function getPosition(req, res, next) {
 
     if (!position.data.length > 0) {
       req.logger.error('Position not found');
-      return res.status(404).send('Position not found.');
+      throwError('Position not found', 404);
     }
 
     req.logger.info('Position found');
@@ -56,8 +60,9 @@ async function getPositions(req, res, next) {
 
 async function createPosition(req, res, next) {
   if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
+    throwError('Unauthorized role', 403);
   }
+
   //Format title and level
   ['title', 'level'].forEach(
     (field) =>
@@ -79,7 +84,7 @@ async function createPosition(req, res, next) {
 
     if (positionFound) {
       req.logger.error('Position already exists');
-      return res.status(400).send('Position already exists');
+      throwError('Position already exists', 400);
     }
 
     req.logger.verbose('Position does not exist. Creating new position.');
@@ -97,11 +102,11 @@ async function createPosition(req, res, next) {
 
 async function updatePosition(req, res, next) {
   if (!req.params.id) {
-    return res.status(404).send('Parameter id not found');
+    throwError('Parameter id not found', 404);
   }
 
   if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
+    throwError('Unauthorized role', 403);
   }
 
   req.logger.info('updatePosition with id: ' + req.params.id);
@@ -112,7 +117,7 @@ async function updatePosition(req, res, next) {
 
     if (!positionFound) {
       req.logger.error('Position not found');
-      return res.status(404).send('Position not found.');
+      throwError('Position not found', 404);
     }
 
     req.logger.verbose('Position found. Updating position.');
@@ -127,7 +132,7 @@ async function updatePosition(req, res, next) {
 
     req.logger.info('Position updated');
 
-    res.status(200).send(`Position with id ${req.params.id} updated.`);
+    res.send(`Position with id ${req.params.id} updated.`);
   } catch (err) {
     req.logger.error(err);
     next(err);
@@ -136,11 +141,11 @@ async function updatePosition(req, res, next) {
 
 async function deletePosition(req, res, next) {
   if (!req.params.id) {
-    return res.status(404).send('Parameter id not found');
+    throwError('Parameter id not found', 404);
   }
 
   if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
+    throwError('Unauthorized role', 403);
   }
 
   req.logger.info('deletePosition with id: ' + req.params.id);
@@ -150,14 +155,14 @@ async function deletePosition(req, res, next) {
 
   if (!positionFound) {
     req.logger.error('Position not found');
-    return res.status(404).send('Position not found.');
+    throwError('Position not found', 404);
   }
 
   req.logger.verbose('Position found. Deleting position.');
 
   try {
     await positionFound.deleteOne();
-    res.status(200).send(`Position with id ${req.params.id} deleted.`);
+    res.send(`Position with id ${req.params.id} deleted.`);
   } catch (err) {
     req.logger.error(err);
     next(err);

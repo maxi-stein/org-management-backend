@@ -4,6 +4,7 @@ import {
   formatString,
   validateDepartment,
   paginateModel,
+  throwError,
 } from '../../utils/helpers.js';
 import { mongoose } from 'mongoose';
 
@@ -32,7 +33,7 @@ async function getArea(req, res, next) {
 
     if (!area) {
       req.logger.error('Area not found');
-      return res.status(404).send('Area not found.');
+      throwError('Area not found', 404);
     }
 
     req.logger.info('Area found');
@@ -78,7 +79,7 @@ async function getAreas(req, res, next) {
 
 async function createArea(req, res, next) {
   if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
+    throwError('Unauthorized role', 403);
   }
   //Format name
   req.body.name = formatString(req.body.name);
@@ -92,7 +93,7 @@ async function createArea(req, res, next) {
 
     if (areaFound) {
       req.logger.error('Area already exists');
-      return res.status(400).send('Area already exists');
+      throwError('Area already exists', 400);
     }
 
     req.logger.info('Area name available for creation.');
@@ -119,23 +120,23 @@ async function createArea(req, res, next) {
 }
 
 async function updateArea(req, res, next) {
-  if (!req.params.id) {
-    return res.status(404).send('Parameter id not found');
-  }
-
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-
-  req.logger.info('updateArea with id: ' + req.params.id);
-  req.logger.verbose('Validating if area exists.');
-
   try {
+    if (!req.params.id) {
+      throwError('Parameter id not found', 404);
+    }
+
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
+    req.logger.info('updateArea with id: ' + req.params.id);
+    req.logger.verbose('Validating if area exists.');
+
     const areaFound = await req.model('Area').findById(req.params.id);
 
     if (!areaFound) {
       req.logger.error('Area not found');
-      return res.status(404).send('Area not found.');
+      throwError('Area not found', 404);
     }
 
     req.logger.verbose('Area found. Updating area.');
@@ -167,27 +168,27 @@ async function updateArea(req, res, next) {
 }
 
 async function deleteArea(req, res, next) {
-  if (!req.params.id) {
-    return res.status(404).send('Parameter id not found');
-  }
-
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-
-  req.logger.info('deleteArea with id: ' + req.params.id);
-  req.logger.verbose('Validating if area exists.');
-
-  const areaFound = await req.model('Area').findById(req.params.id);
-
-  if (!areaFound) {
-    req.logger.error('Area not found');
-    return res.status(404).send('Area not found.');
-  }
-
-  req.logger.verbose('Area found. Deleting area.');
-
   try {
+    if (!req.params.id) {
+      throwError('Parameter id not found', 404);
+    }
+
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
+    req.logger.info('deleteArea with id: ' + req.params.id);
+    req.logger.verbose('Validating if area exists.');
+
+    const areaFound = await req.model('Area').findById(req.params.id);
+
+    if (!areaFound) {
+      req.logger.error('Area not found');
+      throwError('Area not found', 404);
+    }
+
+    req.logger.verbose('Area found. Deleting area.');
+
     await areaFound.deleteOne();
     res.status(200).send(`Area with id ${req.params.id} deleted.`);
   } catch (err) {

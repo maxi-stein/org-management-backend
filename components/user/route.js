@@ -2,7 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import { validatePost, validatePut } from './validation.js';
 import { mongoose } from 'mongoose';
-import { paginateModel } from '../../utils/helpers.js';
+import { paginateModel, throwError } from '../../utils/helpers.js';
 
 export const userRouter = new Router();
 
@@ -20,14 +20,14 @@ function toDate(input) {
 async function getAllUsers(req, res, next) {
   req.logger.info('getAllUsers');
 
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-
-  const { page, limit } = req;
-
-  req.logger.verbose('Finding all users');
   try {
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
+    const { page, limit } = req;
+
+    req.logger.verbose('Finding all users');
     const users = await paginateModel(
       req.model('User'),
       {},
@@ -53,15 +53,15 @@ async function getAllUsers(req, res, next) {
 async function getUserById(req, res, next) {
   req.logger.info('getUserById with id: ' + req.params.id);
 
-  if (!req.params.id) {
-    return res.status(404).send('Parameter Id not found');
-  }
-
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-
   try {
+    if (!req.params.id) {
+      throwError('Parameter Id not found', 404);
+    }
+
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
     req.logger.verbose('Finding user');
     const user = await paginateModel(
       req.model('User'),
@@ -77,7 +77,7 @@ async function getUserById(req, res, next) {
 
     if (!user.data) {
       req.logger.error('User not found');
-      return res.status(404).send('User not found');
+      throwError('User not found', 404);
     }
 
     user.data.supervisedEmployees = await populateSupervisedEmployees(
@@ -96,11 +96,11 @@ async function getUserById(req, res, next) {
 async function getHeadOfDepartments(req, res, next) {
   req.logger.info('getHeadOfDepartments');
 
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-
   try {
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
     req.logger.verbose('Finding head of departments');
     const headOfDepartments = await paginateModel(
       req.model('User'),
@@ -116,7 +116,7 @@ async function getHeadOfDepartments(req, res, next) {
 
     if (!headOfDepartments.data) {
       req.logger.error('Head of departments not found');
-      return res.status(404).send('Head of departments not found');
+      throwError('Head of departments not found', 404);
     }
 
     req.logger.info('Head of departments found');
@@ -130,17 +130,17 @@ async function getHeadOfDepartments(req, res, next) {
 async function createUser(req, res, next) {
   req.logger.info('createUser: ' + JSON.stringify(req.body));
 
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized');
-  }
-
-  const { email, password, role, bornDate } = req.body;
-
   try {
+    if (!req.isAdmin()) {
+      throwError('Unauthorized', 403);
+    }
+
+    const { email, password, role, bornDate } = req.body;
+
     const userExists = await paginateModel(req.model('User'), { email });
     if (userExists.data.length > 0) {
       req.logger.error('User already exists');
-      return res.status(400).send('User already exists');
+      throwError('User already exists', 400);
     }
 
     req.logger.verbose('Checking role');
@@ -148,7 +148,7 @@ async function createUser(req, res, next) {
     const roleFound = await req.model('Role').findById(role);
     if (!roleFound) {
       req.logger.error('Role not found');
-      return res.status(404).send('Role not found');
+      throwError('Role not found', 404);
     }
 
     req.logger.info('Role found');
@@ -188,25 +188,25 @@ async function createUser(req, res, next) {
 async function updateUser(req, res, next) {
   req.logger.info('updateUser with id: ' + req.params.id);
 
-  if (!req.params.id) {
-    return res.status(404).send('Parameter id not found');
-  }
-
-  if (!req.isAdmin() && req.params.id != req.user._id) {
-    return res.status(403).send('Unauthorized role');
-  }
-
-  // The email and _id can't be updated
-  delete req.body.email;
-  delete req.body._id;
-
   try {
+    if (!req.params.id) {
+      throwError('Parameter id not found', 404);
+    }
+
+    if (!req.isAdmin() && req.params.id != req.user._id) {
+      throwError('Unauthorized role', 403);
+    }
+
+    // The email and _id can't be updated
+    delete req.body.email;
+    delete req.body._id;
+
     req.logger.verbose('Finding user to update');
     const userToUpdate = await req.model('User').findById(req.params.id);
 
     if (!userToUpdate) {
       req.logger.error('User not found');
-      return res.status(404).send('User not found');
+      throwError('User not found', 404);
     }
 
     const supervisedEmployees = filterSupervisedEmployees(
@@ -225,7 +225,7 @@ async function updateUser(req, res, next) {
 
       if (!newRole) {
         req.logger.verbose('New role not found. Sending 400 to client');
-        return res.status(400).end();
+        throwError('New role not found', 400);
       }
 
       req.logger.info('Role found');
@@ -280,8 +280,9 @@ const checkSupervisedEmployees = async (req, supervisedEmployees) => {
       const missingIds = supervisedEmployees.filter(
         (id) => !employees.some((employee) => employee._id.equals(id)),
       );
-      throw new Error(
+      throwError(
         `The following employees in charge don't exist: ${missingIds}`,
+        400,
       );
     }
   }

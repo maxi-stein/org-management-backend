@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { formatString, paginateModel } from '../../utils/helpers.js';
+import { paginateModel } from '../../utils/helpers.js';
 
 export const roleRouter = new Router();
 roleRouter.get('/', getRoles);

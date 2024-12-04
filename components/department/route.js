@@ -3,6 +3,7 @@ import {
   formatString,
   validateHeadOfDepartment,
   paginateModel,
+  throwError,
 } from '../../utils/helpers.js';
 import { validatePost, validatePut } from './validation.js';
 
@@ -22,9 +23,10 @@ async function getDepartment(req, res, next) {
       { _id: req.params.id },
       { populate: [{ path: 'head', select: '_id firstName lastName' }] },
     );
+
     if (!department) {
       req.logger.error('Department not found');
-      return res.status(404).send('Department not found.');
+      throwError('Department not found', 404);
     }
 
     req.logger.info('Department found');
@@ -61,15 +63,15 @@ async function getDepartments(req, res, next) {
 }
 
 async function createDepartment(req, res, next) {
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-  //Format name
-  req.body.name = formatString(req.body.name);
-
-  req.logger.info(`createDepartment ${req.body.name}`);
-
   try {
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+    //Format name
+    req.body.name = formatString(req.body.name);
+
+    req.logger.info(`createDepartment ${req.body.name}`);
+
     req.logger.verbose('Validating if department does not exist first.');
 
     const departmentFound = await req
@@ -78,7 +80,7 @@ async function createDepartment(req, res, next) {
 
     if (departmentFound) {
       req.logger.error('Department already exists');
-      return res.status(400).send('Department already exists');
+      throwError('Department already exists', 400);
     }
 
     req.logger.info('Department name available for creation.');
@@ -101,25 +103,25 @@ async function createDepartment(req, res, next) {
 }
 
 async function updateDepartment(req, res, next) {
-  if (!req.params.id) {
-    return res.status(404).send('Parameter id not found');
-  }
-
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-
-  req.logger.info('updateDepartment with id: ' + req.params.id);
-  req.logger.verbose('Validating if department exists.');
-
   try {
+    if (!req.params.id) {
+      throwError('Parameter id not found', 404);
+    }
+
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
+    req.logger.info('updateDepartment with id: ' + req.params.id);
+    req.logger.verbose('Validating if department exists.');
+
     const departmentFound = await req
       .model('Department')
       .findById(req.params.id);
 
     if (!departmentFound) {
       req.logger.error('Department not found');
-      return res.status(404).send('Department not found.');
+      throwError('Department not found.', 404);
     }
 
     req.logger.verbose('Department found.');
@@ -148,25 +150,25 @@ async function updateDepartment(req, res, next) {
 }
 
 async function deleteDepartment(req, res, next) {
-  if (!req.params.id) {
-    return res.status(404).send('Parameter id not found');
-  }
-
-  if (!req.isAdmin()) {
-    return res.status(403).send('Unauthorized role');
-  }
-
-  req.logger.info('deleteDepartment with id: ' + req.params.id);
-  req.logger.verbose('Validating if department exists.');
-
   try {
+    if (!req.params.id) {
+      throwError('Parameter id not found', 404);
+    }
+
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
+    req.logger.info('deleteDepartment with id: ' + req.params.id);
+    req.logger.verbose('Validating if department exists.');
+
     const departmentFound = await req
       .model('Department')
       .findById(req.params.id);
 
     if (!departmentFound) {
       req.logger.error('Department not found');
-      return res.status(404).send('Department not found.');
+      throwError('Department not found.', 404);
     }
 
     req.logger.verbose('Department found. Deleting department.');
