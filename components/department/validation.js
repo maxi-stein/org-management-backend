@@ -5,16 +5,15 @@ export const postDepartmentSchema = Joi.object({
   name: Joi.string().required().messages(requiredMsg('name')),
   description: Joi.string()
     .min(10)
-    .max(200)
     .required()
     .messages(requiredMsg('Description')),
-  head: Joi.string().length(24).hex().required().messages(requiredMsg('head')),
+  head: Joi.string().length(24).hex().allow(null),
 });
 
 export const putDepartmentSchema = Joi.object({
   name: Joi.string(),
-  description: Joi.string().min(10).max(200),
-  head: Joi.string().length(24).hex(),
+  description: Joi.string().min(10),
+  head: Joi.string().length(24).hex().allow(null),
 });
 
 export const validatePost = (req, res, next) =>

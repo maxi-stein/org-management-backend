@@ -20,7 +20,7 @@ export const departmentSchema = new Schema(
     head: {
       type: ObjectId,
       ref: 'User',
-      required: true,
+      required: false,
       unique: true,
     },
   },
