@@ -132,7 +132,7 @@ async function updatePosition(req, res, next) {
 
     req.logger.info('Position updated');
 
-    res.send(`Position with id ${req.params.id} updated.`);
+    res.send({ message: `Position with id ${req.params.id} updated.` });
   } catch (err) {
     req.logger.error(err);
     next(err);
@@ -162,7 +162,7 @@ async function deletePosition(req, res, next) {
 
   try {
     await positionFound.deleteOne();
-    res.send(`Position with id ${req.params.id} deleted.`);
+    res.send({ message: `Position with id ${req.params.id} deleted.` });
   } catch (err) {
     req.logger.error(err);
     next(err);

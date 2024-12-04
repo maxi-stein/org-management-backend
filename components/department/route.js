@@ -142,7 +142,7 @@ async function updateDepartment(req, res, next) {
 
     req.logger.info('Department updated');
 
-    res.status(200).send(`Department with id ${req.params.id} updated.`);
+    res.send({ message: `Department with id ${req.params.id} updated.` });
   } catch (err) {
     req.logger.error(err);
     next(err);
@@ -174,7 +174,7 @@ async function deleteDepartment(req, res, next) {
     req.logger.verbose('Department found. Deleting department.');
 
     await departmentFound.deleteOne();
-    res.status(200).send(`Department with id ${req.params.id} deleted.`);
+    res.send({ message: `Department with id ${req.params.id} deleted.` });
   } catch (err) {
     req.logger.error(err);
     next(err);

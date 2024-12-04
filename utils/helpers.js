@@ -77,7 +77,7 @@ export const paginateModel = async (Model, query = {}, options = {}) => {
     .populate(populate)
     .exec();
 
-  // Contamos el total de documentos sin la paginación
+  // Total number of documents
   const total = await Model.countDocuments(query);
 
   return {

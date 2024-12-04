@@ -28,7 +28,7 @@ async function getStatus(req, res, next) {
       return res.sendStatus(503);
     }
 
-    res.status(200).send({ status: 'The API is up and running' });
+    res.send({ status: 'The API is up and running' });
   } catch (err) {
     next(err);
   }

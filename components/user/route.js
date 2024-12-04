@@ -178,7 +178,7 @@ async function createUser(req, res, next) {
       .model('User')
       .findById(userCreated._id);
 
-    res.status(200).send(userWithoutPassword);
+    res.send(userWithoutPassword);
   } catch (err) {
     req.logger.error(err);
     next(err);
@@ -241,7 +241,7 @@ async function updateUser(req, res, next) {
     req.logger.info('User updated');
 
     delete userToUpdate.password;
-    res.status(200).send(`Position with id ${req.params.id} updated.`);
+    res.send({ message: `Position with id ${req.params.id} updated.` });
   } catch (err) {
     req.logger.error(err);
     next(err);

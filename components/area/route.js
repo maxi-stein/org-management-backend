@@ -160,7 +160,7 @@ async function updateArea(req, res, next) {
 
     req.logger.info('Area updated');
 
-    res.status(200).send(`Area with id ${req.params.id} updated.`);
+    res.send({ message: `Area with id ${req.params.id} updated.` });
   } catch (err) {
     req.logger.error(err);
     next(err);
@@ -190,7 +190,7 @@ async function deleteArea(req, res, next) {
     req.logger.verbose('Area found. Deleting area.');
 
     await areaFound.deleteOne();
-    res.status(200).send(`Area with id ${req.params.id} deleted.`);
+    res.send({ message: `Area with id ${req.params.id} deleted.` });
   } catch (err) {
     req.logger.error(err);
     next(err);
