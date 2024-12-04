@@ -49,6 +49,7 @@ async function getDepartments(req, res, next) {
       {
         page,
         limit,
+        sort: 'name',
         populate: [{ path: 'head', select: '_id firstName lastName' }],
       },
     );

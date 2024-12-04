@@ -46,7 +46,7 @@ async function getPositions(req, res, next) {
     const positions = await paginateModel(
       req.model('Position'),
       {},
-      { page, limit },
+      { page, limit, sort: 'title' },
     );
 
     req.logger.info('Positions found');

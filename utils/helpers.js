@@ -64,7 +64,7 @@ export const validateHeadOfDepartment = async (req, headId) => {
 };
 
 export const paginateModel = async (Model, query = {}, options = {}) => {
-  const { offset = 1, limit = 10, populate = [], sort = '_id' } = options;
+  const { offset = 1, limit = 100, populate = [], sort = '_id' } = options;
 
   const pageNumber = parseInt(offset);
   const pageSize = parseInt(limit);

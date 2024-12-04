@@ -57,6 +57,7 @@ async function getAreas(req, res, next) {
       {
         page,
         limit,
+        sort: 'name',
         populate: {
           path: 'departments',
           select: '_id name description head',

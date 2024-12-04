@@ -34,6 +34,7 @@ async function getAllUsers(req, res, next) {
       {
         page,
         limit,
+        sort: 'lastName',
         populate: [
           { path: 'role', select: '_id name' },
           { path: 'supervisedEmployees', select: '_id firstName lastName' },
