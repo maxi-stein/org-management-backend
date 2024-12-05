@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
 import {
-  formatString,
+  formatStringCamelCase,
   paginateModel,
   throwError,
 } from '../../utils/helpers.js';
@@ -66,7 +66,8 @@ async function createPosition(req, res, next) {
   //Format title and level
   ['title', 'level'].forEach(
     (field) =>
-      req.body[field] && (req.body[field] = formatString(req.body[field])),
+      req.body[field] &&
+      (req.body[field] = formatStringCamelCase(req.body[field])),
   );
 
   if (req.body.level) {
@@ -125,7 +126,8 @@ async function updatePosition(req, res, next) {
     //format title and level
     ['title', 'level'].forEach(
       (field) =>
-        req.body[field] && (req.body[field] = formatString(req.body[field])),
+        req.body[field] &&
+        (req.body[field] = formatStringCamelCase(req.body[field])),
     );
 
     await positionFound.updateOne(req.body);

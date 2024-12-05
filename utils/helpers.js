@@ -1,7 +1,17 @@
-export const formatString = (str) => {
+export const formatStringFirstLetterUppercase = (str) => {
   if (str) {
     const newString = str.toLowerCase();
     return newString.charAt(0).toUpperCase() + newString.slice(1);
+  }
+  return '';
+};
+
+export const formatStringCamelCase = (str) => {
+  if (str) {
+    return str
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
   }
   return '';
 };

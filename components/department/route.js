@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-  formatString,
+  formatStringFirstLetterUppercase,
   validateHeadOfDepartment,
   paginateModel,
   throwError,
@@ -69,7 +69,7 @@ async function createDepartment(req, res, next) {
       throwError('Unauthorized role', 403);
     }
     //Format name
-    req.body.name = formatString(req.body.name);
+    req.body.name = formatStringFirstLetterUppercase(req.body.name);
 
     req.logger.info(`createDepartment ${req.body.name}`);
 
@@ -129,7 +129,7 @@ async function updateDepartment(req, res, next) {
 
     if (req.body.name) {
       //Format name
-      req.body.name = formatString(req.body.name);
+      req.body.name = formatStringFirstLetterUppercase(req.body.name);
     }
 
     if (req.body.head && req.body.head != departmentFound.head._id) {

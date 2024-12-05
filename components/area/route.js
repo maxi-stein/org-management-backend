@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validatePost, validatePut } from './validation.js';
 import {
-  formatString,
+  formatStringFirstLetterUppercase,
   validateDepartment,
   paginateModel,
   throwError,
@@ -83,7 +83,7 @@ async function createArea(req, res, next) {
     throwError('Unauthorized role', 403);
   }
   //Format name
-  req.body.name = formatString(req.body.name);
+  req.body.name = formatStringFirstLetterUppercase(req.body.name);
 
   req.logger.info(`createArea ${req.body.name}`);
 
@@ -145,7 +145,8 @@ async function updateArea(req, res, next) {
     //format title and level
     ['title', 'level'].forEach(
       (field) =>
-        req.body[field] && (req.body[field] = formatString(req.body[field])),
+        req.body[field] &&
+        (req.body[field] = formatStringFirstLetterUppercase(req.body[field])),
     );
 
     if (req.body.departments) {
