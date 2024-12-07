@@ -165,7 +165,7 @@ async function createUser(req, res, next) {
 
     const userCreated = await req.model('User').create({
       ...req.body,
-      bornDate: toDate(bornDate),
+      bornDate: new Date(bornDate),
       password: passEncrypted,
       supervisedEmployees: supervisedEmployees,
     });

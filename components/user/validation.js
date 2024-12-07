@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { requiredMsg, validateSchema } from '../../utils/helpers.js';
+import dayjs from 'dayjs';
 
 const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
@@ -19,16 +20,13 @@ const postUserSchema = Joi.object({
   bornDate: Joi.string()
     .required()
     .custom((value, helpers) => {
-      const [day, month, year] = value.split('/');
-      const date = new Date(year, month - 1, day);
-      if (
-        date.getFullYear() !== parseInt(year, 10) ||
-        date.getMonth() !== parseInt(month, 10) - 1 ||
-        date.getDate() !== parseInt(day, 10)
-      ) {
+      const date = dayjs(value, 'YYYY-MM-DDTHH:mm:ss.SSSZ', true);
+
+      if (!date.isValid()) {
         return helpers.error('any.invalid');
       }
-      return date;
+
+      new Date(date.toISOString());
     })
     .messages(requiredMsg('bornDate')),
   isActive: Joi.boolean().default(true),
@@ -41,22 +39,17 @@ const putUserSchema = Joi.object({
   email: Joi.string().email(),
   password: Joi.string().pattern(pattern),
   role: Joi.string().length(24).hex(),
-  supervisedEmployees: Joi.array().items(
-    Joi.string().length(24).hex().required(),
-  ),
+  supervisedEmployees: Joi.array().items(Joi.string().length(24).hex()),
   phone: Joi.string(),
   bornDate: Joi.string()
     .custom((value, helpers) => {
-      const [day, month, year] = value.split('/');
-      const date = new Date(year, month - 1, day);
-      if (
-        date.getFullYear() !== parseInt(year, 10) ||
-        date.getMonth() !== parseInt(month, 10) - 1 ||
-        date.getDate() !== parseInt(day, 10)
-      ) {
+      const date = dayjs(value, 'DD-MM-YYYY[T]HHmmss', true);
+
+      if (!date.isValid()) {
         return helpers.error('any.invalid');
       }
-      return date;
+
+      return date.toDate();
     })
     .messages(requiredMsg('bornDate')),
   isActive: Joi.boolean().default(true),
