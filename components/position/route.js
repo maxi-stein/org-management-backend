@@ -121,6 +121,15 @@ async function updatePosition(req, res, next) {
       throwError('Position not found', 404);
     }
 
+    //deny edit of Head of Department and CEO (critical positions)
+    if (
+      positionFound.title === 'CEO' ||
+      positionFound.title === 'Head of Department'
+    ) {
+      req.logger.error('Position cannot be edited');
+      throwError('Position cannot be edited', 403);
+    }
+
     req.logger.verbose('Position found. Updating position.');
 
     //format title and level
@@ -158,6 +167,15 @@ async function deletePosition(req, res, next) {
   if (!positionFound) {
     req.logger.error('Position not found');
     throwError('Position not found', 404);
+  }
+
+  //deny delete of Head of Department and CEO (critical positions)
+  if (
+    positionFound.title === 'CEO' ||
+    positionFound.title === 'Head of Department'
+  ) {
+    req.logger.error('Position cannot be edited');
+    throwError('Position cannot be edited', 403);
   }
 
   req.logger.verbose('Position found. Deleting position.');

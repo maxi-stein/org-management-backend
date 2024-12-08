@@ -7,7 +7,7 @@ const postPositionSchema = Joi.object().keys({
 });
 const putPositionSchema = Joi.object().keys({
   title: Joi.string(),
-  level: Joi.string(),
+  level: Joi.string().allow(null),
 });
 
 export const validatePost = (req, res, next) =>
