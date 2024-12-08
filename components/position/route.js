@@ -172,7 +172,7 @@ async function deletePosition(req, res, next) {
   //deny delete of Head of Department and CEO (critical positions)
   if (
     positionFound.title === 'CEO' ||
-    positionFound.title === 'Head of Department'
+    positionFound.title === 'Head Of Department'
   ) {
     req.logger.error('Position cannot be edited');
     throwError('Position cannot be edited', 403);
