@@ -6,14 +6,14 @@ const initialUsers = [
   // Main Admin
   {
     _id: new ObjectId('000000000000000000000000'),
-    firstName: 'Admin',
-    lastName: 'Api',
-    email: 'admin@api.com',
+    firstName: 'Peter',
+    lastName: 'Parker',
+    email: 'peter.parker@company.com',
     password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
     role: new ObjectId('000000000000000000000000'), // Admin
     supervisedEmployees: [],
     phone: '(+54) 9 1176806956',
-    bornDate: new Date(1990, 4, 29),
+    bornDate: new Date(1970, 4, 29),
     isActive: true,
     position: new ObjectId('000000000000000000000000'),
     __v: 0,

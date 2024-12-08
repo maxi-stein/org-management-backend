@@ -4,8 +4,14 @@ const { ObjectId } = mongodb;
 
 const initialPositions = [
   {
+    _id: new ObjectId('000000000000000000000000'),
+    title: 'CEO',
+    level: null,
+    __v: 0,
+  },
+  {
     _id: new ObjectId('000000000000000000000001'),
-    title: 'Head of Department',
+    title: 'Head Of Department',
     level: null,
     __v: 0,
   },
