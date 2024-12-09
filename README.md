@@ -1,22 +1,57 @@
-# base-api-node
+# Organizational Chart Management - Backend
 
-This is a base project for a API in NodeJs and MongoDB
+## 🚀 Overview
 
-## Installation:
+This is the backend server for the Org Management System, a powerful Node.js and Express-based API designed to support organizational management operations. It provides a comprehensive suite of endpoints for managing users, positions, departments, and areas within a company.
 
-> To run the project you need to have installed Node and mongoDb
+This project is forked from the basic API created by Gastón Larriera, which laid the groundwork by providing an initial setup with JWT-based authentication and some basic configuration middleware. From there, business logic and additional features were implemented to expand the system's functionality.
 
-Initialize project:
+## 🌟 Key Features
 
-```sh
-npm i
-npm run start
-```
+- **User Management**: CRUD operations for user accounts
+- **Role-based Access Control**: Admin and Employee roles
+- **Position Management**: Manage job positions within the organization
+- **Department and Area Management**: Organize company structure
+- **JWT Authentication**: Secure login system integrated
+- **Database Migrations**: Easy database schema management
 
-To run migrations
+## 🛠️ Tech Stack
 
-```sh
-npm run migrate up
-```
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Validation**: Joi
+- **Password Hashing**: bcrypt
+- **Configuration Management**: config
+- **Logging**: Winston (implied from logger configuration)
 
-**By Gaston Ariel Larriera**
+## 📋 Prerequisites
+
+Before running this project, make sure you have the following installed:
+
+- **Node.js** (LTS version is recommended) - [Download here](https://nodejs.org/)
+- **MongoDB** (local installation or MongoDB Atlas) - [Download here](https://www.mongodb.com/try/download/community)
+
+## Getting Started
+
+1. Clone the repository: `git clone <repository_url>`
+2. Install dependencies: `npm install`
+3. Run migrations (to set up the database schema): `npm run migrate up`
+4. Run the development server: `npm run dev`
+5. Set up environment variables:
+   - Create a `.env` file in the root directory
+   - Add `NEXT_PUBLIC_API_URL=http://localhost:4000` (or your backend URL)
+6. Ensure the backend server is running and accessible
+
+7. **Configuration:**  
+   This project uses a `development.json` file for configuration, so you **don't need to create a `.env` file**.  
+   The `development.json` file provided in this repository contains the environment configuration such as the server URL, database connection, JWT settings, and more.
+
+## 🔐 Authentication
+
+This application uses **JWT (JSON Web Token)** for authentication. The login system is already integrated with the backend, providing secure access to protected routes and features.
+
+## 👨‍💻 Acknowledgements
+
+This project was forked from **Gastón Larriera's** base API, which provided the initial setup, middleware configuration, and JWT authentication logic.
