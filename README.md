@@ -48,6 +48,10 @@ Before running this project, make sure you have the following installed:
    This project uses a `development.json` file for configuration, so you **don't need to create a `.env` file**.  
    The `development.json` file provided in this repository contains the environment configuration such as the server URL, database connection, JWT settings, and more.
 
+## ❗Error Handling
+
+API errors are logged in the `api-errors.log` file located in the root directory. The file records error messages and stack traces for debugging.
+
 ## 🔐 Authentication
 
 This application uses **JWT (JSON Web Token)** for authentication. The login system is already integrated with the backend, providing secure access to protected routes and features.
