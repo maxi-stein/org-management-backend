@@ -80,9 +80,9 @@ async function getUserById(req, res, next) {
       throwError('User not found', 404);
     }
 
-    user.data.supervisedEmployees = await populateSupervisedEmployees(
+    user.data[0].supervisedEmployees = await populateSupervisedEmployees(
       req,
-      user.data.supervisedEmployees,
+      user.data[0].supervisedEmployees,
     );
 
     req.logger.info('User found');
@@ -269,7 +269,6 @@ async function populateSupervisedEmployees(req, supervisedEmployees) {
       { path: 'position', select: '_id title level' },
       { path: 'supervisedEmployees', select: '_id firstName lastName' },
     ]);
-
   // Populate the supervised employees recursively
   await Promise.all(
     employees.map(async (employee) => {
@@ -278,6 +277,7 @@ async function populateSupervisedEmployees(req, supervisedEmployees) {
         employee.supervisedEmployees.length > 0
       ) {
         employee.supervisedEmployees = await populateSupervisedEmployees(
+          req,
           employee.supervisedEmployees,
         );
       }
