@@ -5,13 +5,20 @@ import {
   paginateModel,
   throwError,
 } from '../../utils/helpers.js';
+import { LevelEnum } from './schema.js';
 
 export const positionRouter = new Router();
+positionRouter.get('/levels', getLevels);
 positionRouter.get('/:id', getPosition);
 positionRouter.get('/', getPositions);
 positionRouter.post('/', validatePost, createPosition);
 positionRouter.put('/:id', validatePut, updatePosition);
 positionRouter.delete('/:id', deletePosition);
+
+function getLevels(req, res) {
+  req.logger.info('getLevels');
+  res.send({ data: LevelEnum });
+}
 
 async function getPosition(req, res, next) {
   req.logger.info('getPosition with id: ' + req.params.id);
@@ -63,12 +70,7 @@ async function createPosition(req, res, next) {
     throwError('Unauthorized role', 403);
   }
 
-  //Format title and level
-  ['title', 'level'].forEach(
-    (field) =>
-      req.body[field] &&
-      (req.body[field] = formatStringCamelCase(req.body[field])),
-  );
+  req.body.title = formatStringCamelCase(req.body.title);
 
   if (req.body.level) {
     req.logger.info(`createPosition: ${req.body.level} ${req.body.title} `);
@@ -132,12 +134,7 @@ async function updatePosition(req, res, next) {
 
     req.logger.verbose('Position found. Updating position.');
 
-    //format title and level
-    ['title', 'level'].forEach(
-      (field) =>
-        req.body[field] &&
-        (req.body[field] = formatStringCamelCase(req.body[field])),
-    );
+    req.body.title = formatStringCamelCase(req.body.title);
 
     await positionFound.updateOne(req.body);
 
