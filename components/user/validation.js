@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { requiredMsg, validateSchema } from '../../utils/helpers.js';
 import dayjs from 'dayjs';
+import { LevelEnum } from '../position/schema.js';
 
 const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
@@ -31,6 +32,10 @@ const postUserSchema = Joi.object({
     .messages(requiredMsg('bornDate')),
   isActive: Joi.boolean().default(true),
   position: Joi.string().length(24).hex(),
+  positionLevel: Joi.string()
+    .valid(...Object.keys(LevelEnum))
+    .required()
+    .allow(null),
 });
 
 const putUserSchema = Joi.object({
@@ -54,6 +59,9 @@ const putUserSchema = Joi.object({
     .messages(requiredMsg('bornDate')),
   isActive: Joi.boolean().default(true),
   position: Joi.string().length(24).hex(),
+  positionLevel: Joi.string()
+    .valid(...Object.keys(LevelEnum))
+    .allow(null),
 });
 
 export const validatePost = (req, res, next) =>

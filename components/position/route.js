@@ -5,6 +5,7 @@ import {
   paginateModel,
   throwError,
 } from '../../utils/helpers.js';
+
 import { LevelEnum } from './schema.js';
 
 export const positionRouter = new Router();
@@ -72,18 +73,14 @@ async function createPosition(req, res, next) {
 
   req.body.title = formatStringCamelCase(req.body.title);
 
-  if (req.body.level) {
-    req.logger.info(`createPosition: ${req.body.level} ${req.body.title} `);
-  } else {
-    req.logger.info(`createPosition: ${req.body.title}`);
-  }
+  req.logger.info(`createPosition: ${req.body.title}`);
 
   try {
     req.logger.verbose('Validating if position does not exist first.');
 
     const positionFound = await req
       .model('Position')
-      .findOne({ title: req.body.title, level: req.body.level });
+      .findOne({ title: req.body.title });
 
     if (positionFound) {
       req.logger.error('Position already exists');

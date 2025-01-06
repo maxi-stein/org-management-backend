@@ -8,15 +8,7 @@ export const LevelEnum = Object.freeze({
 
 export const positionSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, trim: true },
-    level: {
-      type: String,
-      enum: Object.keys(LevelEnum),
-      default: null,
-      trim: true,
-    },
+    title: { type: String, required: true, trim: true, unique: true },
   },
   { timestamps: true },
 );
-
-positionSchema.index({ title: 1, level: 1 }, { unique: true });

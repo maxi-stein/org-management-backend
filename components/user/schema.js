@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import validate from 'mongoose-validator';
 import bcrypt from 'bcrypt';
+import { LevelEnum } from '../position/schema.js';
 
 const Schema = mongoose.Schema;
 const { ObjectId } = Schema.Types;
@@ -33,6 +34,12 @@ export const userSchema = new Schema(
     position: {
       type: ObjectId,
       ref: 'Position',
+    },
+    positionLevel: {
+      type: String,
+      enum: Object.keys(LevelEnum),
+      default: null,
+      trim: true,
     },
   },
   { timestamps: true },

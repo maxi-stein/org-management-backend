@@ -11,11 +11,6 @@ userRouter.get('/:id', getUserById);
 userRouter.post('/', validatePost, createUser);
 userRouter.put('/:id', validatePut, updateUser);
 
-function toDate(input) {
-  const [day, month, year] = input.split('/');
-  return new Date(year, month, day);
-}
-
 async function getAllUsers(req, res, next) {
   req.logger.info('getAllUsers');
 
