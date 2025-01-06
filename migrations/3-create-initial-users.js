@@ -16,6 +16,7 @@ const initialUsers = [
     bornDate: new Date(1970, 4, 29),
     isActive: true,
     position: new ObjectId('000000000000000000000000'),
+    positionLevel: null,
     __v: 0,
   },
   // ** HEADS OF DEPARTMENT **
@@ -32,6 +33,7 @@ const initialUsers = [
     bornDate: new Date(1985, 1, 15),
     isActive: true,
     position: new ObjectId('000000000000000000000001'),
+    positionLevel: null,
     __v: 0,
   },
   //Organizational Development
@@ -47,6 +49,7 @@ const initialUsers = [
     bornDate: new Date(1990, 6, 22),
     isActive: true,
     position: new ObjectId('000000000000000000000001'),
+    positionLevel: null,
     __v: 0,
   },
   //Software Development
@@ -62,6 +65,7 @@ const initialUsers = [
     bornDate: new Date(1988, 11, 30),
     isActive: true,
     position: new ObjectId('000000000000000000000001'),
+    positionLevel: null,
     __v: 0,
   },
   //Infrastructure
@@ -80,6 +84,7 @@ const initialUsers = [
     bornDate: new Date(1995, 3, 10),
     isActive: true,
     position: new ObjectId('000000000000000000000001'),
+    positionLevel: null,
     __v: 0,
   },
   //Technical Support
@@ -95,6 +100,7 @@ const initialUsers = [
     bornDate: new Date(1982, 8, 25),
     isActive: true,
     position: new ObjectId('000000000000000000000001'),
+    positionLevel: null,
     __v: 0,
   },
   //Customer Service
@@ -110,6 +116,7 @@ const initialUsers = [
     bornDate: new Date(1993, 2, 5),
     isActive: true,
     position: new ObjectId('000000000000000000000001'),
+    positionLevel: null,
     __v: 0,
   },
   // ** EMPLOYEES **
@@ -125,6 +132,7 @@ const initialUsers = [
     bornDate: new Date(1992, 3, 22),
     isActive: true,
     position: new ObjectId('000000000000000000000002'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -139,6 +147,7 @@ const initialUsers = [
     bornDate: new Date(1988, 11, 30),
     isActive: true,
     position: new ObjectId('000000000000000000000003'),
+    positionLevel: 'SSR',
     __v: 0,
   },
   {
@@ -153,6 +162,7 @@ const initialUsers = [
     bornDate: new Date(1995, 4, 10),
     isActive: true,
     position: new ObjectId('000000000000000000000004'),
+    positionLevel: 'SR',
     __v: 0,
   },
   {
@@ -167,6 +177,7 @@ const initialUsers = [
     bornDate: new Date(1982, 8, 25),
     isActive: true,
     position: new ObjectId('000000000000000000000005'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -181,6 +192,7 @@ const initialUsers = [
     bornDate: new Date(1993, 2, 5),
     isActive: true,
     position: new ObjectId('000000000000000000000006'),
+    positionLevel: 'SSR',
     __v: 0,
   },
   {
@@ -198,6 +210,7 @@ const initialUsers = [
     bornDate: new Date(1991, 5, 15),
     isActive: true,
     position: new ObjectId('000000000000000000000007'),
+    positionLevel: 'SR',
     __v: 0,
   },
   {
@@ -212,6 +225,7 @@ const initialUsers = [
     bornDate: new Date(1989, 3, 10),
     isActive: true,
     position: new ObjectId('000000000000000000000008'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -226,6 +240,7 @@ const initialUsers = [
     bornDate: new Date(1994, 7, 20),
     isActive: true,
     position: new ObjectId('000000000000000000000009'),
+    positionLevel: 'SSR',
     __v: 0,
   },
   {
@@ -243,6 +258,7 @@ const initialUsers = [
     bornDate: new Date(1987, 2, 14),
     isActive: true,
     position: new ObjectId('000000000000000000000010'),
+    positionLevel: 'SR',
     __v: 0,
   },
   {
@@ -257,6 +273,7 @@ const initialUsers = [
     bornDate: new Date(1996, 9, 8),
     isActive: true,
     position: new ObjectId('000000000000000000000011'),
+    positionLevel: 'SR',
     __v: 0,
   },
   {
@@ -271,6 +288,7 @@ const initialUsers = [
     bornDate: new Date(1990, 6, 12),
     isActive: true,
     position: new ObjectId('000000000000000000000012'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -285,6 +303,7 @@ const initialUsers = [
     bornDate: new Date(1985, 8, 28),
     isActive: true,
     position: new ObjectId('000000000000000000000013'),
+    positionLevel: 'SSR',
     __v: 0,
   },
   {
@@ -299,6 +318,7 @@ const initialUsers = [
     bornDate: new Date(1984, 1, 5),
     isActive: true,
     position: new ObjectId('000000000000000000000014'),
+    positionLevel: 'SR',
     __v: 0,
   },
   {
@@ -313,6 +333,7 @@ const initialUsers = [
     bornDate: new Date(1992, 12, 15),
     isActive: true,
     position: new ObjectId('000000000000000000000015'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -327,6 +348,7 @@ const initialUsers = [
     bornDate: new Date(1990, 1, 15),
     isActive: true,
     position: new ObjectId('000000000000000000000016'),
+    positionLevel: 'SSR',
     __v: 0,
   },
   {
@@ -344,6 +366,7 @@ const initialUsers = [
     bornDate: new Date(1986, 4, 18),
     isActive: true,
     position: new ObjectId('000000000000000000000017'),
+    positionLevel: 'SR',
     __v: 0,
   },
   {
@@ -358,6 +381,7 @@ const initialUsers = [
     bornDate: new Date(1995, 11, 3),
     isActive: true,
     position: new ObjectId('000000000000000000000018'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -372,6 +396,7 @@ const initialUsers = [
     bornDate: new Date(1991, 9, 22),
     isActive: true,
     position: new ObjectId('000000000000000000000019'),
+    positionLevel: 'SSR',
     __v: 0,
   },
   {
@@ -389,6 +414,7 @@ const initialUsers = [
     bornDate: new Date(1994, 6, 14),
     isActive: true,
     position: new ObjectId('000000000000000000000020'),
+    positionLevel: 'SR',
     __v: 0,
   },
 ];
