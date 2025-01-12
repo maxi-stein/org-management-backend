@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
-export const LevelEnum = Object.freeze({
-  JR: 'Junior',
-  SSR: 'Semi-Senior',
-  SR: 'Senior',
-});
+export const LevelEnum = [
+  { value: 'JR', label: 'Junior' },
+  { value: 'SSR', label: 'Semi-Senior' },
+  { value: 'SR', label: 'Senior' },
+];
 
 export const positionSchema = new mongoose.Schema(
   {
