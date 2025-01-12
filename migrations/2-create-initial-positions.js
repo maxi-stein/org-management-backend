@@ -54,16 +54,6 @@ const initialPositions = [
     __v: 0,
   },
   {
-    _id: new ObjectId('000000000000000000000009'),
-    title: 'Developer',
-    __v: 0,
-  },
-  {
-    _id: new ObjectId('000000000000000000000010'),
-    title: 'Developer',
-    __v: 0,
-  },
-  {
     _id: new ObjectId('000000000000000000000011'),
     title: 'Tech Leader',
     __v: 0,
