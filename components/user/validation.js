@@ -31,9 +31,9 @@ const postUserSchema = Joi.object({
     })
     .messages(requiredMsg('bornDate')),
   isActive: Joi.boolean().default(true),
-  position: Joi.string().length(24).hex(),
+  position: Joi.string().length(24).hex().required(),
   positionLevel: Joi.string()
-    .valid(...Object.keys(LevelEnum))
+    .valid(...LevelEnum.map((level) => level.value))
     .required()
     .allow(null),
 });
@@ -60,7 +60,7 @@ const putUserSchema = Joi.object({
   isActive: Joi.boolean().default(true),
   position: Joi.string().length(24).hex(),
   positionLevel: Joi.string()
-    .valid(...Object.keys(LevelEnum))
+    .valid(...LevelEnum.map((level) => level.value))
     .allow(null),
 });
 

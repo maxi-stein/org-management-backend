@@ -37,7 +37,7 @@ export const userSchema = new Schema(
     },
     positionLevel: {
       type: String,
-      enum: Object.keys(LevelEnum),
+      enum: LevelEnum.map((level) => level.value),
       default: null,
       trim: true,
     },
