@@ -23,7 +23,6 @@ This project is forked from the basic API created by Gastón Larriera, which lai
 - **Authentication**: JWT (JSON Web Tokens)
 - **Validation**: Joi
 - **Password Hashing**: bcrypt
-- **Configuration Management**: config
 - **Logging**: Winston (implied from logger configuration)
 
 ## 📋 Prerequisites
@@ -39,12 +38,7 @@ Before running this project, make sure you have the following installed:
 2. Install dependencies: `npm install`
 3. Run migrations (to set up the database schema): `npm run migrate up`
 4. Run the development server: `npm run dev`
-5. Set up environment variables:
-   - Create a `.env` file in the root directory
-   - Add `NEXT_PUBLIC_API_URL=http://localhost:4000` (or your backend URL)
-6. Ensure the backend server is running and accessible
-
-7. **Configuration:**  
+5. **Configuration:**  
    This project uses a `development.json` file for configuration, so you **don't need to create a `.env` file**.  
    The `development.json` file provided in this repository contains the environment configuration such as the server URL, database connection, JWT settings, and more.
 
