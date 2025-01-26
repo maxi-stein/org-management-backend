@@ -10,6 +10,7 @@ userRouter.get('/', getAllUsers);
 userRouter.get('/:id', getUserById);
 userRouter.post('/', validatePost, createUser);
 userRouter.put('/:id', validatePut, updateUser);
+userRouter.delete('/:id', deleteUser);
 
 async function getAllUsers(req, res, next) {
   req.logger.info('getAllUsers');
@@ -70,7 +71,7 @@ async function getUserById(req, res, next) {
       },
     );
 
-    if (!user.data) {
+    if (user.data.length === 0) {
       req.logger.error('User not found');
       throwError('User not found', 404);
     }
@@ -208,6 +209,64 @@ async function updateUser(req, res, next) {
     next(err);
   }
 }
+
+async function deleteUser(req, res, next) {
+  try {
+    if (!req.params.id) {
+      throwError('Parameter id not found', 404);
+    }
+
+    if (!req.isAdmin()) {
+      throwError('Unauthorized role', 403);
+    }
+
+    req.logger.info('deleteUser with id: ' + req.params.id);
+    req.logger.verbose('Validating if user exists.');
+
+    const userFound = await req.model('User').findById(req.params.id);
+
+    if (!userFound) {
+      req.logger.error('User not found');
+      throwError('User not found.', 404);
+    }
+
+    req.logger.verbose('User found. Checking if user is beeing supervised.');
+
+    const supervisor = await getSupervisor(req);
+
+    if (supervisor) {
+      req.logger.verbose(
+        `User is being supervised by ${supervisor._id}. Removing from supervisor list.`,
+      );
+      const newSupervisedEmployees = supervisor.supervisedEmployees.filter(
+        (employeeId) => !employeeId.equals(req.params.id),
+      );
+      await req
+        .model('User')
+        .updateOne(
+          { _id: supervisor._id },
+          { supervisedEmployees: newSupervisedEmployees },
+        );
+      req.logger.info('User removed from supervisor list.');
+    } else {
+      req.logger.info('User is not being supervised. Deleting user.');
+    }
+
+    await req.model('User').deleteOne({ _id: req.params.id });
+    res.send({ message: `User with id ${req.params.id} deleted.` });
+  } catch (err) {
+    req.logger.error(err);
+    next(err);
+  }
+}
+
+const getSupervisor = async (req) => {
+  const supervisor = await req
+    .model('User')
+    .findOne({ supervisedEmployees: req.params.id })
+    .select('_id firstName lastName supervisedEmployees');
+  return supervisor;
+};
 
 const filterSupervisedEmployees = (req, supervisedEmployees) => {
   //filter duplicates ids
