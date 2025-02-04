@@ -16,7 +16,7 @@ async function getAllUsers(req, res, next) {
   req.logger.info('getAllUsers');
 
   try {
-    if (!req.isAdmin()) {
+    if (!req.isAdmin() && !req.isEmployee()) {
       throwError('Unauthorized role', 403);
     }
 
@@ -54,7 +54,7 @@ async function getUserById(req, res, next) {
       throwError('Parameter Id not found', 404);
     }
 
-    if (!req.isAdmin()) {
+    if (!req.isAdmin() && !req.isEmployee()) {
       throwError('Unauthorized role', 403);
     }
 

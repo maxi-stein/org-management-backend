@@ -56,8 +56,8 @@ export const authorization = (req, res, next) => {
     return req.user && req.user.role === 'admin';
   };
 
-  req.isClient = function isClient() {
-    return req.user && req.user.role === 'client';
+  req.isEmployee = function isEmployee() {
+    return req.user && req.user.role === 'employee';
   };
 
   return next(null);
