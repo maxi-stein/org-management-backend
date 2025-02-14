@@ -11,7 +11,14 @@ const initialUsers = [
     email: 'peter.parker@company.com',
     password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
     role: new ObjectId('000000000000000000000000'), // Admin
-    supervisedEmployees: [],
+    supervisedEmployees: [
+      new ObjectId('000000000000000000000001'),
+      new ObjectId('000000000000000000000002'),
+      new ObjectId('000000000000000000000003'),
+      new ObjectId('000000000000000000000004'),
+      new ObjectId('000000000000000000000005'),
+      new ObjectId('000000000000000000000006'),
+    ],
     phone: '(+54) 9 1176806956',
     bornDate: new Date(1970, 4, 29),
     isActive: true,
