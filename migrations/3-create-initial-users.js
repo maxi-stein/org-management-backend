@@ -128,33 +128,18 @@ const initialUsers = [
   },
   // ** EMPLOYEES **
   {
-    _id: new ObjectId('000000000000000000000008'),
-    firstName: 'Patric',
-    lastName: 'Gates',
-    email: 'patric.gates@company.com',
-    password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
-    role: new ObjectId('000000000000000000000001'), // Client
-    supervisedEmployees: [],
-    phone: '(+54) 9 1176805678',
-    bornDate: new Date(1992, 3, 22),
-    isActive: true,
-    position: new ObjectId('000000000000000000000002'),
-    positionLevel: 'JR',
-    __v: 0,
-  },
-  {
     _id: new ObjectId('000000000000000000000009'),
     firstName: 'Charlie',
     lastName: 'Dafoe',
     email: 'charlie.dafoe@company.com',
     password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
     role: new ObjectId('000000000000000000000001'), // Client
-    supervisedEmployees: [new ObjectId('000000000000000000000008')],
+    supervisedEmployees: [],
     phone: '(+54) 9 1176809876',
     bornDate: new Date(1988, 11, 30),
     isActive: true,
     position: new ObjectId('000000000000000000000003'),
-    positionLevel: 'SSR',
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -194,12 +179,27 @@ const initialUsers = [
     email: 'susan.williams@company.com',
     password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
     role: new ObjectId('000000000000000000000001'), // Client
-    supervisedEmployees: [],
+    supervisedEmployees: [new ObjectId('000000000000000000000029')],
     phone: '(+54) 9 1176804321',
     bornDate: new Date(1993, 2, 5),
     isActive: true,
     position: new ObjectId('000000000000000000000006'),
     positionLevel: 'SSR',
+    __v: 0,
+  },
+  {
+    _id: new ObjectId('000000000000000000000029'),
+    firstName: 'Lily',
+    lastName: 'Smith',
+    email: 'lily.smith@company.com',
+    password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
+    role: new ObjectId('000000000000000000000001'), // Client
+    supervisedEmployees: [],
+    phone: '(+54) 9 1176804324',
+    bornDate: new Date(1996, 6, 15),
+    isActive: true,
+    position: new ObjectId('000000000000000000000006'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -236,18 +236,48 @@ const initialUsers = [
     __v: 0,
   },
   {
+    _id: new ObjectId('000000000000000000000027'),
+    firstName: 'Daniel',
+    lastName: 'Schneider',
+    email: 'daniel.schneider@company.com',
+    password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
+    role: new ObjectId('000000000000000000000001'), // Client
+    supervisedEmployees: [],
+    phone: '(+54) 9 1187806323',
+    bornDate: new Date(1999, 5, 8),
+    isActive: true,
+    position: new ObjectId('000000000000000000000008'),
+    positionLevel: 'JR',
+    __v: 0,
+  },
+  {
     _id: new ObjectId('000000000000000000000015'),
     firstName: 'Isla',
     lastName: 'Hernandez',
     email: 'isla.hernandez@company.com',
     password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
     role: new ObjectId('000000000000000000000001'), // Client
-    supervisedEmployees: [],
+    supervisedEmployees: [new ObjectId('000000000000000000000028')],
     phone: '(+54) 9 1176804323',
     bornDate: new Date(1994, 7, 20),
     isActive: true,
     position: new ObjectId('000000000000000000000008'),
     positionLevel: 'SSR',
+    __v: 0,
+  },
+  {
+    _id: new ObjectId('000000000000000000000028'),
+    firstName: 'Sofia',
+    lastName: 'Gonzalez',
+    email: 'sofia.gonzalez@company.com',
+    password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
+    role: new ObjectId('000000000000000000000001'), // Client
+    supervisedEmployees: [],
+    phone: '(+54) 9 1187806324',
+    bornDate: new Date(1997, 11, 1),
+    isActive: true,
+    position: new ObjectId('000000000000000000000008'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
@@ -260,6 +290,7 @@ const initialUsers = [
     supervisedEmployees: [
       new ObjectId('000000000000000000000015'),
       new ObjectId('000000000000000000000014'),
+      new ObjectId('000000000000000000000027'),
     ],
     phone: '(+54) 9 1176804324',
     bornDate: new Date(1987, 2, 14),
@@ -398,12 +429,45 @@ const initialUsers = [
     email: 'lucas.hill@company.com',
     password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
     role: new ObjectId('000000000000000000000001'), // Client
-    supervisedEmployees: [],
+    supervisedEmployees: [
+      new ObjectId('000000000000000000000030'),
+      new ObjectId('000000000000000000000031'),
+    ],
     phone: '(+54) 9 1176804322',
     bornDate: new Date(1991, 9, 22),
     isActive: true,
     position: new ObjectId('000000000000000000000019'),
     positionLevel: 'SSR',
+    __v: 0,
+  },
+  {
+    _id: new ObjectId('000000000000000000000030'),
+    firstName: 'Luna',
+    lastName: 'Petersen',
+    email: 'luna.petersen@company.com',
+    password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
+    role: new ObjectId('000000000000000000000001'), // Client
+    supervisedEmployees: [],
+    phone: '(+54) 9 1176804324',
+    bornDate: new Date(1991, 10, 22),
+    isActive: true,
+    position: new ObjectId('000000000000000000000019'),
+    positionLevel: 'JR',
+    __v: 0,
+  },
+  {
+    _id: new ObjectId('000000000000000000000031'),
+    firstName: 'Ethan',
+    lastName: 'Johnson',
+    email: 'ethan.johnson@company.com',
+    password: '$2a$10$J3Qa3YiZTxXBX7NsSXMWmeVfrnsK7GXyCQM8sQ0VpSgvULxA/DOgO', // Password1
+    role: new ObjectId('000000000000000000000001'), // Client
+    supervisedEmployees: [],
+    phone: '(+54) 9 1176809999',
+    bornDate: new Date(1992, 5, 15),
+    isActive: true,
+    position: new ObjectId('000000000000000000000019'),
+    positionLevel: 'JR',
     __v: 0,
   },
   {
