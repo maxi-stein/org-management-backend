@@ -308,7 +308,7 @@ const checkSupervisedEmployees = async (req, supervisedEmployees) => {
   }
 };
 
-async function populateSupervisedEmployees(req, supervisedEmployees) {
+export async function populateSupervisedEmployees(req, supervisedEmployees) {
   // If there are no supervised employees, return the empty array
   if (!supervisedEmployees || supervisedEmployees.length === 0) {
     return [];
