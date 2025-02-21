@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { throwError } from '../../utils/helpers.js';
 import { populateSupervisedEmployees } from '../user/route.js';
+import { LevelEnum } from '../position/schema.js';
 
 export const statsRouter = new Router();
 statsRouter.get('/departments-people', getDeptPeople);
+statsRouter.get('/seniorities', getSeniorities);
 
 async function getDeptPeople(req, res, next) {
   req.logger.info('getDeptPeople');
@@ -51,6 +52,34 @@ async function getDeptPeople(req, res, next) {
     });
 
     res.send({ data: dataSet });
+  } catch (err) {
+    req.logger.error(err);
+    next(err);
+  }
+}
+
+async function getSeniorities(req, res, next) {
+  req.logger.info('getSeniorities');
+
+  try {
+    const quantiyBySeniority = await Promise.all(
+      LevelEnum.map(async (level) => {
+        const count = await req
+          .model('User')
+          .find({ positionLevel: level.value })
+          .countDocuments();
+        return {
+          label: level.label,
+          count,
+        };
+      }),
+    );
+    const otherLevels =
+      (await req.model('User').find().countDocuments()) -
+      quantiyBySeniority.reduce((a, b) => a + b.count, 0);
+    quantiyBySeniority.push({ label: 'Other', count: otherLevels });
+
+    res.send({ data: quantiyBySeniority });
   } catch (err) {
     req.logger.error(err);
     next(err);
