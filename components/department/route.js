@@ -86,7 +86,9 @@ async function createDepartment(req, res, next) {
 
     req.logger.info('Department name available for creation.');
 
-    await validateHeadOfDepartment(req, req.body.head);
+    if (req.body.head) {
+      await validateHeadOfDepartment(req, req.body.head);
+    }
 
     req.logger.verbose(
       'Head of Department is available. Creating new department.',

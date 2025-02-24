@@ -39,12 +39,13 @@ async function getDeptPeople(req, res, next) {
     //count how many people for each department
     const dataSet = departments.map((dept) => {
       const [head] = populatedHeads.filter((p) => {
-        return dept.head.equals(p[0]._id);
+        return dept.head?.equals(p[0]._id);
       });
-      const allSupervisedEmployees = flatMapAllSupervisedEmployees(
-        head[0].supervisedEmployees,
-      );
-      const totalCount = allSupervisedEmployees.length + 1;
+      const allSupervisedEmployees =
+        head?.[0].supervisedEmployees?.length > 0
+          ? flatMapAllSupervisedEmployees(head[0].supervisedEmployees)
+          : [];
+      const totalCount = allSupervisedEmployees.length + (head ? 1 : 0);
       return {
         label: dept.name,
         count: totalCount,
